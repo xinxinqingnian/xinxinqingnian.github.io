@@ -1,102 +1,186 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>新新青年</title>
-<style>
-* {box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
-body{background:#f6f6f6;padding:20px;max-width:800px;margin:auto}
-.header{text-align:center;margin:20px 0}
-.submit{text-align:center;margin:20px 0}
-.submit a{background:#1a73e8;color:#fff;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:bold}
-.search{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:15px}
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.tab{padding:8px 14px;background:#fff;border:1px solid #ccc;border-radius:20px;cursor:pointer}
-.tab.active{background:#1a73e8;color:#fff}
-.article{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px}
-.article h3{margin-bottom:8px}
-.article .info{color:#666;font-size:14px;margin-bottom:8px}
-.article .content{line-height:1.6}
-</style>
+    <meta charset="UTF-8">
+    <title>新新青年</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .submit {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .submit a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        .search {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .article {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .article h3 {
+            margin-bottom: 8px;
+        }
+        .article .info {
+            color: #666;
+            font-size: 14px;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal .box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal .close {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>新新青年</h1>
-  <p>为青年发声</p>
-</div>
+    <div class="header">
+        <h1>新新青年</h1>
+        <p>为青年发声</p>
+    </div>
 
-<div class="submit">
-  <a href="https://wj.qq.com/s2/26084616/2a3d/" target="_blank">点击投稿</a>
-</div>
+    <div class="submit">
+        <a href="https://wj.qq.com/s2/26084616/2a3d/" target="_blank">点击投稿</a>
+    </div>
 
-<input class="search" id="search" placeholder="搜索标题、内容…">
+    <input class="search" id="search" placeholder="搜索文章标题或内容">
 
-<div class="tabs">
-  <div class="tab active" data-cate="all">全部</div>
-  <div class="tab" data-cate="青年观点">青年观点</div>
-  <div class="tab" data-cate="文艺副刊">文艺副刊</div>
-  <div class="tab" data-cate="生活纪实">生活纪实</div>
-  <div class="tab" data-cate="行动倡议">行动倡议</div>
-  <div class="tab" data-cate="其他">其他</div>
-</div>
+    <div class="tabs">
+        <div class="tab active" data-cate="all">全部</div>
+        <div class="tab" data-cate="青年观点">青年观点</div>
+        <div class="tab" data-cate="文艺副刊">文艺副刊</div>
+        <div class="tab" data-cate="生活纪实">生活纪实</div>
+        <div class="tab" data-cate="行动倡议">行动倡议</div>
+        <div class="tab" data-cate="其他">其他</div>
+    </div>
 
-<div id="list"></div>
+    <div id="list"></div>
+
+    <div class="modal" id="modal">
+        <div class="box">
+            <h3 id="modalTitle"></h3>
+            <div style="margin:10px 0; color:#666" id="modalInfo"></div>
+            <div id="modalContent"></div>
+            <button class="close" onclick="closeModal()">关闭</button>
+        </div>
+    </div>
 
 <script>
-// 在这里手动写文章，check: true 才会显示
-const articles = [
-  {
-    title: "创刊词",
-    author: "编辑部",
-    cate: "青年观点",
-    content: "我们是新新青年，为时代发声。",
-    check: true
-  },
-  {
-    title: "示例文章",
-    author: "匿名",
-    cate: "其他",
-    content: "这是一篇测试文章。",
-    check: false
-  }
-];
-
-const list = document.getElementById('list');
-const search = document.getElementById('search');
-const tabs = document.querySelectorAll('.tab');
+let articles = [];
+async function loadData() {
+  const res = await fetch("admin.html");
+  const text = await res.text();
+  const m = text.match(/window\.articleData\s*=\s*(\[[\s\S]*?\]);/);
+  if (m) articles = eval(m[1]);
+  render();
+}
 
 function render() {
-  const kw = search.value.toLowerCase();
-  const nowCate = document.querySelector('.tab.active').dataset.cate;
-  
-  let html = '';
-  articles.forEach(art => {
+  const kw = document.getElementById("search").value.toLowerCase();
+  const cate = document.querySelector(".tab.active").dataset.cate;
+  const list = document.getElementById("list");
+  let html = "";
+  articles.forEach((art,i)=>{
     if (!art.check) return;
-    if (nowCate !== 'all' && art.cate !== nowCate) return;
+    if (cate!=="all" && art.cate!==cate) return;
     if (!art.title.toLowerCase().includes(kw) && !art.content.toLowerCase().includes(kw)) return;
-    
-    html += `
-    <div class="article">
-      <h3>${art.title}</h3>
-      <div class="info">作者：${art.author}｜${art.cate}</div>
-      <div class="content">${art.content}</div>
-    </div>`;
+    html+=`<div class="article" onclick="openArt(${i})"><h3>${art.title}</h3><div class="info">作者：${art.author}｜${art.cate}</div></div>`;
   });
   list.innerHTML = html;
 }
 
-search.addEventListener('input', render);
+function openArt(i){
+  const a=articles[i];
+  document.getElementById("modalTitle").innerText=a.title;
+  document.getElementById("modalInfo").innerText=`作者：${a.author}｜${a.cate}`;
+  document.getElementById("modalContent").innerText=a.content;
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
 
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
+document.getElementById("search").addEventListener("input",render);
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
     render();
   });
 });
 
-render();
+loadData();
 </script>
 </body>
 </html>
