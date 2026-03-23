@@ -2,49 +2,25 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>新新青年</title>
+<title>新新青年 · 后台</title>
 <style>
 * {box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
-body{background:#f6f6f6;padding:20px;max-width:800px;margin:auto}
-.header{text-align:center;margin:20px 0}
-.submit{text-align:center;margin:20px 0}
-.submit a{background:#1a73e8;color:#fff;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:bold}
-.search{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:15px}
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.tab{padding:8px 14px;background:#fff;border:1px solid #ccc;border-radius:20px;cursor:pointer}
-.tab.active{background:#1a73e8;color:#fff}
-.article{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px}
-.article h3{margin-bottom:8px}
-.article .info{color:#666;font-size:14px;margin-bottom:8px}
-.article .content{line-height:1.6}
+body{background:#f6f6f6;padding:20px;max-width:900px;margin:auto}
+h1{text-align:center;margin:20px 0}
+.item{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px}
+.item h3{margin-bottom:6px}
+.info{color:#666;font-size:14px;margin-bottom:8px}
+.content{background:#f8f9fa;padding:10px;border-radius:6px;margin-bottom:10px}
+.status{font-weight:bold}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>新新青年</h1>
-  <p>为青年发声</p>
-</div>
-
-<div class="submit">
-  <a href="https://wj.qq.com/s2/26084616/2a3d/" target="_blank">点击投稿</a>
-</div>
-
-<input class="search" id="search" placeholder="搜索标题、内容…">
-
-<div class="tabs">
-  <div class="tab active" data-cate="all">全部</div>
-  <div class="tab" data-cate="青年观点">青年观点</div>
-  <div class="tab" data-cate="文艺副刊">文艺副刊</div>
-  <div class="tab" data-cate="生活纪实">生活纪实</div>
-  <div class="tab" data-cate="行动倡议">行动倡议</div>
-  <div class="tab" data-cate="其他">其他</div>
-</div>
+<h1>新新青年 · 管理后台</h1>
 
 <div id="list"></div>
 
 <script>
-// 在这里手动写文章，check: true 才会显示
+// 这里和前台的 articles 保持完全一样！
 const articles = [
   {
     title: "创刊词",
@@ -62,39 +38,19 @@ const articles = [
   }
 ];
 
-const list = document.getElementById('list');
-const search = document.getElementById('search');
-const tabs = document.querySelectorAll('.tab');
-
 function render() {
-  const kw = search.value.toLowerCase();
-  const nowCate = document.querySelector('.tab.active').dataset.cate;
-  
   let html = '';
-  articles.forEach(art => {
-    if (!art.check) return;
-    if (nowCate !== 'all' && art.cate !== nowCate) return;
-    if (!art.title.toLowerCase().includes(kw) && !art.content.toLowerCase().includes(kw)) return;
-    
+  articles.forEach((art, i) => {
     html += `
-    <div class="article">
-      <h3>${art.title}</h3>
+    <div class="item">
+      <h3>${i+1}. ${art.title}</h3>
       <div class="info">作者：${art.author}｜${art.cate}</div>
       <div class="content">${art.content}</div>
+      <div class="status">${art.check ? '✅ 已发布' : '⏸ 待审核'}</div>
     </div>`;
   });
-  list.innerHTML = html;
+  document.getElementById('list').innerHTML = html;
 }
-
-search.addEventListener('input', render);
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    render();
-  });
-});
 
 render();
 </script>
