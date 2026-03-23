@@ -44,35 +44,36 @@ body{background:#f6f6f6;padding:20px;max-width:800px;margin:auto}
 <div id="list"></div>
 
 <script>
+// 在这里手动写文章，check: true 才会显示
+const articles = [
+  {
+    title: "创刊词",
+    author: "编辑部",
+    cate: "青年观点",
+    content: "我们是新新青年，为时代发声。",
+    check: true
+  },
+  {
+    title: "示例文章",
+    author: "匿名",
+    cate: "其他",
+    content: "这是一篇测试文章。",
+    check: false
+  }
+];
+
 const list = document.getElementById('list');
 const search = document.getElementById('search');
 const tabs = document.querySelectorAll('.tab');
 
-async function loadArticles() {
-  const sheetUrl = "https://docs.qq.com/sheet/DYnp4ZUdodkx6Z3V5?tab=BB08J2&csv";
-  const res = await fetch(sheetUrl);
-  const text = await res.text();
-  const rows = text.split('\n').slice(1);
-  return rows.map(row => {
-    const cols = row.split(',');
-    return {
-      title: cols[12] || '无标题',
-      author: cols[11] || '匿名',
-      cate: cols[16] || '其他',
-      content: cols[13] || '无内容',
-      check: cols[17] == 'TRUE'
-    };
-  });
-}
-
-function render(articles) {
-  let html = '';
+function render() {
   const kw = search.value.toLowerCase();
-  const activeCate = document.querySelector('.tab.active').dataset.cate;
-
+  const nowCate = document.querySelector('.tab.active').dataset.cate;
+  
+  let html = '';
   articles.forEach(art => {
     if (!art.check) return;
-    if (activeCate !== 'all' && art.cate !== activeCate) return;
+    if (nowCate !== 'all' && art.cate !== nowCate) return;
     if (!art.title.toLowerCase().includes(kw) && !art.content.toLowerCase().includes(kw)) return;
     
     html += `
@@ -85,19 +86,17 @@ function render(articles) {
   list.innerHTML = html;
 }
 
-loadArticles().then(articles => {
-  window.articles = articles;
-  render(articles);
-});
+search.addEventListener('input', render);
 
-search.addEventListener('input', () => render(window.articles));
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     tabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    render(window.articles);
+    render();
   });
 });
+
+render();
 </script>
 </body>
 </html>
