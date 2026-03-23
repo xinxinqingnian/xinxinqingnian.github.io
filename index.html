@@ -104,18 +104,14 @@
     </style>
 </head>
 <body>
-
     <div class="header">
         <h1>新新青年</h1>
         <p>为青年发声</p>
     </div>
-
     <div class="submit">
         <a href="https://wj.qq.com/s2/26084616/2a3d/" target="_blank">点击投稿</a>
     </div>
-
     <input class="search" id="search" placeholder="搜索文章标题或内容">
-
     <div class="tabs">
         <div class="tab active" data-cate="all">全部</div>
         <div class="tab" data-cate="青年观点">青年观点</div>
@@ -124,9 +120,7 @@
         <div class="tab" data-cate="行动倡议">行动倡议</div>
         <div class="tab" data-cate="其他">其他</div>
     </div>
-
     <div id="list"></div>
-
     <div class="modal" id="modal">
         <div class="box">
             <h3 id="modalTitle"></h3>
@@ -135,14 +129,16 @@
             <button class="close" onclick="closeModal()">关闭</button>
         </div>
     </div>
-
 <script>
 let articles = [];
+
 async function loadData() {
-  const res = await fetch("admin.html");
-  const text = await res.text();
-  const m = text.match(/window\.articleData\s*=\s*(\[[\s\S]*?\]);/);
-  if (m) articles = eval(m[1]);
+  try {
+    const res = await fetch("admin.html");
+    const text = await res.text();
+    const match = text.match(/window\.articleData\s*=\s*(\[[\s\S]*?\]);/);
+    if (match) articles = eval(match[1]);
+  } catch(e) { console.error("加载失败", e); }
   render();
 }
 
