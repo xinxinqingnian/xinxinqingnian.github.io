@@ -54,7 +54,8 @@ function render(){
   articles.forEach(art => {
     if (!art.check) return;
     if (activeCate !== 'all' && art.cate !== activeCate) return;
-    if (!art.title.toLowerCase().includes(kw) && !art.content.toLowerCase().includes(kw)) return;
+    const match = art.title.toLowerCase().includes(kw) || art.content.toLowerCase().includes(kw);
+    if (!match) return;
 
     html += `
     <div class="article">
