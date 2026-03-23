@@ -59,27 +59,12 @@
 </style>
 </head>
 <body>
-
 <h1>新新青年 · 管理后台</h1>
 <div id="list"></div>
-
 <script>
-// 所有文章只在这里写！！！
+// 在这里写你的所有文章，示例已清空
 window.articleData = [
-  {
-    title: "创刊词",
-    author: "编辑部",
-    cate: "青年观点",
-    content: "我们是新新青年，为时代发声，为理想前行。",
-    check: true
-  },
-  {
-    title: "测试文章",
-    author: "匿名",
-    cate: "其他",
-    content: "这是一篇待审核稿件",
-    check: false
-  }
+  
 ];
 
 function render() {
@@ -98,7 +83,6 @@ function render() {
   document.getElementById('list').innerHTML = html;
 }
 
-// 删除稿件
 function delArticle(index) {
   if (!confirm('确定要删除这篇稿件吗？')) return;
   window.articleData.splice(index, 1);
@@ -107,6 +91,5 @@ function delArticle(index) {
 
 render();
 </script>
-
 </body>
 </html>
