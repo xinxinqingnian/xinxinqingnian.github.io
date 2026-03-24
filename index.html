@@ -163,13 +163,9 @@
         <div class="tab" data-cate="行动倡议">行动倡议</div>
         <div class="tab" data-cate="其他">其他</div>
     </div>
-    <div id="list">
-        <!-- 示例文章，和你截图里的占位一致 -->
-        <div class="article" onclick="openArt(0)">
-            <h3>问卷里的文章标题</h3>
-            <div class="info">作者：问卷里的作者名｜青年观点</div>
-        </div>
-    </div>
+
+    <div id="list"></div>
+
     <div class="rules-box">
         <h2>发文规则</h2>
         <p><strong>一、不反国家，不反党</strong><br>
@@ -182,12 +178,14 @@
         正视问题，反思弊病，目的是推动改变、守护公平。</p>
         <p style="margin-top:15px;font-weight:bold;">青年发声，有边界，有温度，有力量。</p>
     </div>
+
     <div class="footer">
         <p>© 2026 新新青年 · 思想与青年同行</p>
         <p style="margin-top:12px;">
             <a href="https://wj.qq.com/s2/25946661/7ccc/" target="_blank">腾讯问答</a>
         </p>
     </div>
+
     <div class="modal" id="modal">
         <div class="box">
             <h3 id="modalTitle"></h3>
@@ -196,17 +194,19 @@
             <button class="close" onclick="closeModal()">关闭</button>
         </div>
     </div>
+
 <script>
-// 示例文章数据，和你截图里的占位一致
-let articles = [
-    {
-        title: "问卷里的文章标题",
-        author: "问卷里的作者名",
-        cate: "青年观点",
-        content: "这是文章的具体内容，点击文章后会在这里弹窗显示。",
-        check: true
-    }
-];
+let articles = [];
+
+async function loadData() {
+  try {
+    const res = await fetch("admin.html");
+    const text = await res.text();
+    const match = text.match(/window\.articleData\s*=\s*(\[[\s\S]*?\]);/);
+    if (match) articles = eval(match[1]);
+  } catch(e) { console.error("加载失败", e); }
+  render();
+}
 
 function render() {
   const kw = document.getElementById("search").value.toLowerCase();
@@ -242,8 +242,7 @@ document.querySelectorAll(".tab").forEach(t=>{
   });
 });
 
-// 初始渲染
-render();
+loadData();
 </script>
 </body>
 </html>
