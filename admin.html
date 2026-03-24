@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>新新青年 · 管理后台</title>
 <style>
 * {
@@ -9,103 +10,115 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Microsoft Yahei", sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 body {
-  background-color: #f5f5f5;
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+  background: #f5f5f5;
+  padding: 12px;
+  max-width: 100%;
 }
 .head {
   text-align: center;
-  margin: 20px 0;
+  margin: 16px 0 10px;
 }
 .head h1 {
-  font-size: 24px;
-  margin-bottom: 8px;
+  font-size: 20px;
 }
 .tip {
   color: #007bff;
-  font-size: 14px;
-  margin-bottom: 20px;
+  font-size: 12px;
   text-align: center;
+  margin-bottom: 16px;
+  line-height: 1.4;
 }
 .form {
-  background: white;
-  padding: 20px;
+  background: #fff;
+  padding: 14px;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .form input,
 .form textarea,
 .form select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 15px;
 }
 .form textarea {
   min-height: 100px;
+  resize: vertical;
 }
 .form button {
+  width: 100%;
   background: #007bff;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
 }
 .item {
   background: white;
-  padding: 20px;
+  padding: 14px;
   border-radius: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 .item h3 {
-  margin-bottom: 8px;
-  font-size: 18px;
+  font-size: 16px;
+  margin-bottom: 6px;
 }
 .info {
+  font-size: 12px;
   color: #666;
-  font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .content {
   background: #f8f9fa;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
   white-space: pre-wrap;
+  margin-bottom: 10px;
+  line-height: 1.5;
 }
 .btns {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 .btn {
-  padding: 6px 12px;
+  flex: 1;
+  padding: 10px 0;
   border: none;
   border-radius: 6px;
   color: white;
-  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
 }
 .btn.blue { background: #007bff; }
 .btn.red { background: #f44336; }
-.btn.gray { background: #6c757d; }
 
 .code-box {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
   margin-top: 20px;
   border: 1px solid #ddd;
 }
+.code-box strong {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 8px;
+}
 .code-box pre {
+  font-size: 11px;
   white-space: pre-wrap;
-  font-size: 12px;
-  color: #333;
-  max-height: 200px;
+  max-height: 180px;
   overflow-y: auto;
+  color: #333;
 }
 </style>
 </head>
@@ -113,7 +126,7 @@ body {
 
 <div class="head">
   <h1>新新青年 · 管理后台</h1>
-  <div class="tip">修改后复制下方代码 → 覆盖 GitHub 上的 admin.html 即可永久生效</div>
+  <div class="tip">修改后复制底部代码 → 覆盖 GitHub 上的 admin.html</div>
 </div>
 
 <div class="form">
@@ -133,22 +146,20 @@ body {
 <div id="list"></div>
 
 <div class="code-box">
-  <strong>复制以下内容覆盖 admin.html 里的 window.articleData = [...];</strong>
+  <strong>复制这一段覆盖 admin.html 里的 window.articleData</strong>
   <pre id="codeOut"></pre>
 </div>
 
 <script>
 window.articleData = [
   {
-    "title": "发刊词：我们为什么要办这份报刊？",
-    "author": "新新青年",
-    "cate": "青年观点",
-    "content": "为了让更多青年发出自己的声音，为了独立思考，为了不盲从，为了在这个喧嚣的时代里，保留一份清醒与热爱。\n这里是属于我们的阵地，记录思考，分享故事，传递温度。",
-    "check": true
+    title: "发刊词：我们为什么要办这份报刊？",
+    author: "新新青年",
+    cate: "青年观点",
+    content: "为了让更多青年发出自己的声音，为了独立思考，为了不盲从，为了在这个喧嚣的时代里，保留一份清醒与热爱。\n这里是属于我们的阵地，记录思考，分享故事，传递温度。",
+    check: true
   }
 ];
-
-  
 
 function render() {
   let html = "";
@@ -156,9 +167,9 @@ function render() {
     html += `
     <div class="item">
       <h3>${art.title}</h3>
-      <div class="info">作者：${art.author}｜${art.cate}</div>
+      <div class="info">${art.author}｜${art.cate}</div>
       <div class="content">${art.content}</div>
-      <div class="info">状态：${art.check ? '✅ 已发布' : '⏸ 待审核'}</div>
+      <div class="info">${art.check ? '✅ 已发布' : '⏸ 待审核'}</div>
       <div class="btns">
         <button class="btn blue" onclick="toggle(${i})">${art.check ? '下架' : '发布'}</button>
         <button class="btn red" onclick="del(${i})">删除</button>
