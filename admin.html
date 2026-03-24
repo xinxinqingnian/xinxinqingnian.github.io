@@ -16,32 +16,39 @@ body {
   max-width: 900px;
   margin: 0 auto;
 }
-h1 {
+.head {
   text-align: center;
-  margin: 20px 0 30px;
-  font-size: 24px;
+  margin: 20px 0;
 }
-.form-box {
+.head h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+.tip {
+  color: #007bff;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.form {
   background: white;
   padding: 20px;
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
-.form-box input,
-.form-box textarea,
-.form-box select {
+.form input,
+.form textarea,
+.form select {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 14px;
 }
-.form-box textarea {
+.form textarea {
   min-height: 100px;
-  resize: vertical;
 }
-.form-box button {
+.form button {
   background: #007bff;
   color: white;
   border: none;
@@ -56,8 +63,8 @@ h1 {
   margin-bottom: 15px;
 }
 .item h3 {
-  font-size: 18px;
   margin-bottom: 8px;
+  font-size: 18px;
 }
 .info {
   color: #666;
@@ -68,14 +75,12 @@ h1 {
   background: #f8f9fa;
   padding: 12px;
   border-radius: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   white-space: pre-wrap;
-  line-height: 1.6;
 }
 .btns {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
 }
 .btn {
   padding: 6px 12px;
@@ -83,19 +88,35 @@ h1 {
   border-radius: 6px;
   color: white;
   cursor: pointer;
-  font-size: 14px;
 }
-.btn.red { background: #f44336; }
 .btn.blue { background: #007bff; }
+.btn.red { background: #f44336; }
 .btn.gray { background: #6c757d; }
+
+.code-box {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+}
+.code-box pre {
+  white-space: pre-wrap;
+  font-size: 12px;
+  color: #333;
+  max-height: 200px;
+  overflow-y: auto;
+}
 </style>
 </head>
 <body>
 
-<h1>新新青年 · 管理后台</h1>
+<div class="head">
+  <h1>新新青年 · 管理后台</h1>
+  <div class="tip">修改后复制下方代码 → 覆盖 GitHub 上的 admin.html 即可永久生效</div>
+</div>
 
-<!-- 新增文章 -->
-<div class="form-box">
+<div class="form">
   <input type="text" id="title" placeholder="文章标题">
   <input type="text" id="author" placeholder="作者">
   <select id="cate">
@@ -109,11 +130,14 @@ h1 {
   <button onclick="addArticle()">添加文章</button>
 </div>
 
-<!-- 文章列表 -->
 <div id="list"></div>
 
+<div class="code-box">
+  <strong>复制以下内容覆盖 admin.html 里的 window.articleData = [...];</strong>
+  <pre id="codeOut"></pre>
+</div>
+
 <script>
-// 初始数据（和你官网一致）
 window.articleData = [
   {
     title: "发刊词：我们为什么要办这份报刊？",
@@ -131,57 +155,49 @@ window.articleData = [
   }
 ];
 
-// 渲染列表
 function render() {
-  let html = '';
+  let html = "";
   window.articleData.forEach((art, i) => {
     html += `
     <div class="item">
       <h3>${art.title}</h3>
-      <div class="info">作者：${art.author}｜分类：${art.cate}</div>
+      <div class="info">作者：${art.author}｜${art.cate}</div>
       <div class="content">${art.content}</div>
       <div class="info">状态：${art.check ? '✅ 已发布' : '⏸ 待审核'}</div>
       <div class="btns">
-        <button class="btn blue" onclick="toggleCheck(${i})">
-          ${art.check ? '下架' : '发布'}
-        </button>
+        <button class="btn blue" onclick="toggle(${i})">${art.check ? '下架' : '发布'}</button>
         <button class="btn red" onclick="del(${i})">删除</button>
       </div>
-    </div>
-    `;
+    </div>`;
   });
-  document.getElementById('list').innerHTML = html;
+  document.getElementById("list").innerHTML = html;
+  updateCode();
 }
 
-// 添加文章
+function updateCode() {
+  const str = JSON.stringify(window.articleData, null, 2);
+  document.getElementById("codeOut").innerText = "window.articleData = " + str + ";";
+}
+
 function addArticle() {
-  const title = document.getElementById('title').value.trim();
-  const author = document.getElementById('author').value.trim();
-  const cate = document.getElementById('cate').value;
-  const content = document.getElementById('content').value.trim();
-  if (!title || !author || !content) {
-    alert('请填写完整信息');
-    return;
-  }
-  window.articleData.unshift({
-    title, author, cate, content, check: false
-  });
-  // 清空
-  document.getElementById('title').value = '';
-  document.getElementById('author').value = '';
-  document.getElementById('content').value = '';
+  const title = document.getElementById("title").value.trim();
+  const author = document.getElementById("author").value.trim();
+  const cate = document.getElementById("cate").value;
+  const content = document.getElementById("content").value.trim();
+  if (!title || !author || !content) return alert("请填写完整");
+  window.articleData.unshift({ title, author, cate, content, check: false });
+  document.getElementById("title").value = "";
+  document.getElementById("content").value = "";
   render();
 }
 
-// 切换发布状态
-function toggleCheck(i) {
+function toggle(i) {
   window.articleData[i].check = !window.articleData[i].check;
   render();
 }
 
-// 删除
 function del(i) {
-  if (!confirm('确定删除？')) return;
+  if (!confirm("确定删除？")) return;
   window.articleData.splice(i, 1);
   render();
 }
