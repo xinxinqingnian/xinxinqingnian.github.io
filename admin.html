@@ -4,89 +4,185 @@
 <meta charset="UTF-8">
 <title>新新青年 · 管理后台</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Microsoft Yahei", sans-serif;
-  }
-  body {
-    background-color: #f5f5f5;
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  h1 {
-    text-align: center;
-    margin: 30px 0;
-    font-size: 24px;
-  }
-  .item {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-  }
-  .item h3 {
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
-  .info {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  .content {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    white-space: pre-wrap;
-    line-height: 1.6;
-  }
-  .status {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .del-btn {
-    background: #f44336;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft Yahei", sans-serif;
+}
+body {
+  background-color: #f5f5f5;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+h1 {
+  text-align: center;
+  margin: 20px 0 30px;
+  font-size: 24px;
+}
+.form-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+.form-box input,
+.form-box textarea,
+.form-box select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.form-box textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.form-box button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.item {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+.item h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.info {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.content {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+.btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn.red { background: #f44336; }
+.btn.blue { background: #007bff; }
+.btn.gray { background: #6c757d; }
 </style>
 </head>
 <body>
-<h1>新新青年 · 管理后台</h1>
-<div id="list"></div>
-<script>
-// 在这里写你的所有文章，示例已清空
-window.articleData = [
 
-  
+<h1>新新青年 · 管理后台</h1>
+
+<!-- 新增文章 -->
+<div class="form-box">
+  <input type="text" id="title" placeholder="文章标题">
+  <input type="text" id="author" placeholder="作者">
+  <select id="cate">
+    <option value="青年观点">青年观点</option>
+    <option value="文艺副刊">文艺副刊</option>
+    <option value="生活纪实">生活纪实</option>
+    <option value="行动倡议">行动倡议</option>
+    <option value="其他">其他</option>
+  </select>
+  <textarea id="content" placeholder="文章内容"></textarea>
+  <button onclick="addArticle()">添加文章</button>
+</div>
+
+<!-- 文章列表 -->
+<div id="list"></div>
+
+<script>
+// 初始数据（和你官网一致）
+window.articleData = [
+  {
+    title: "发刊词：我们为什么要办这份报刊？",
+    author: "新新青年",
+    cate: "青年观点",
+    content: "为了让更多青年发出自己的声音，为了独立思考，为了不盲从，为了在这个喧嚣的时代里，保留一份清醒与热爱。\n这里是属于我们的阵地，记录思考，分享故事，传递温度。",
+    check: true
+  },
+  {
+    title: "春天的信",
+    author: "新新青年",
+    cate: "文艺副刊",
+    content: "风把云揉成信笺，寄给每一个等待的人。\n你听，那是春天在敲门。",
+    check: true
+  }
 ];
 
+// 渲染列表
 function render() {
   let html = '';
-  window.articleData.forEach((art, index) => {
+  window.articleData.forEach((art, i) => {
     html += `
     <div class="item">
-      <h3>${index + 1}. ${art.title}</h3>
-      <div class="info">作者：${art.author} ｜ 分类：${art.cate}</div>
+      <h3>${art.title}</h3>
+      <div class="info">作者：${art.author}｜分类：${art.cate}</div>
       <div class="content">${art.content}</div>
-      <div class="status">${art.check ? '✅ 已发布' : '⏸ 待审核'}</div>
-      <button class="del-btn" onclick="delArticle(${index})">删除此稿件</button>
+      <div class="info">状态：${art.check ? '✅ 已发布' : '⏸ 待审核'}</div>
+      <div class="btns">
+        <button class="btn blue" onclick="toggleCheck(${i})">
+          ${art.check ? '下架' : '发布'}
+        </button>
+        <button class="btn red" onclick="del(${i})">删除</button>
+      </div>
     </div>
     `;
   });
   document.getElementById('list').innerHTML = html;
 }
 
-function delArticle(index) {
-  if (!confirm('确定要删除这篇稿件吗？')) return;
-  window.articleData.splice(index, 1);
+// 添加文章
+function addArticle() {
+  const title = document.getElementById('title').value.trim();
+  const author = document.getElementById('author').value.trim();
+  const cate = document.getElementById('cate').value;
+  const content = document.getElementById('content').value.trim();
+  if (!title || !author || !content) {
+    alert('请填写完整信息');
+    return;
+  }
+  window.articleData.unshift({
+    title, author, cate, content, check: false
+  });
+  // 清空
+  document.getElementById('title').value = '';
+  document.getElementById('author').value = '';
+  document.getElementById('content').value = '';
+  render();
+}
+
+// 切换发布状态
+function toggleCheck(i) {
+  window.articleData[i].check = !window.articleData[i].check;
+  render();
+}
+
+// 删除
+function del(i) {
+  if (!confirm('确定删除？')) return;
+  window.articleData.splice(i, 1);
   render();
 }
 
