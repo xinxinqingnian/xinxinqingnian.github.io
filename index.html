@@ -19,7 +19,7 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .header h1 {
             font-size: 32px;
@@ -42,6 +42,24 @@
             border-radius: 8px;
             text-decoration: none;
             font-size: 16px;
+        }
+        .rules-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+        .rules-box h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .rules-box p {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        .rules-box strong {
+            font-size: 20px;
         }
         .search {
             width: 100%;
@@ -84,24 +102,6 @@
         .article .info {
             color: #666;
             font-size: 14px;
-        }
-        .rules-box {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            border: 2px solid #333;
-        }
-        .rules-box h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        .rules-box p {
-            font-size: 18px;
-            margin-bottom: 12px;
-        }
-        .rules-box strong {
-            font-size: 20px;
         }
         .footer {
             text-align: center;
@@ -154,18 +154,8 @@
     <div class="submit">
         <a href="https://wj.qq.com/s2/26084616/2a3d/" target="_blank">点击投稿</a>
     </div>
-    <input class="search" id="search" placeholder="搜索文章标题或内容">
-    <div class="tabs">
-        <div class="tab active" data-cate="all">全部</div>
-        <div class="tab" data-cate="青年观点">青年观点</div>
-        <div class="tab" data-cate="文艺副刊">文艺副刊</div>
-        <div class="tab" data-cate="生活纪实">生活纪实</div>
-        <div class="tab" data-cate="行动倡议">行动倡议</div>
-        <div class="tab" data-cate="其他">其他</div>
-    </div>
 
-    <div id="list"></div>
-
+    <!-- 发文规则置顶 -->
     <div class="rules-box">
         <h2>发文规则</h2>
         <p><strong>一、不反国家，不反党</strong><br>
@@ -177,6 +167,24 @@
         <p><strong>四、我们批判体系的黑暗面，而非全盘否定</strong><br>
         正视问题，反思弊病，目的是推动改变、守护公平。</p>
         <p style="margin-top:15px;font-weight:bold;">青年发声，有边界，有温度，有力量。</p>
+    </div>
+
+    <input class="search" id="search" placeholder="搜索文章标题或内容">
+    <div class="tabs">
+        <div class="tab active" data-cate="all">全部</div>
+        <div class="tab" data-cate="青年观点">青年观点</div>
+        <div class="tab" data-cate="文艺副刊">文艺副刊</div>
+        <div class="tab" data-cate="生活纪实">生活纪实</div>
+        <div class="tab" data-cate="行动倡议">行动倡议</div>
+        <div class="tab" data-cate="其他">其他</div>
+    </div>
+
+    <div id="list">
+        <!-- 发刊词固定显示 -->
+        <div class="article" onclick="openArt(0)">
+            <h3>发刊词：我们为什么要办这份报刊？</h3>
+            <div class="info">作者：新新青年｜青年观点</div>
+        </div>
     </div>
 
     <div class="footer">
@@ -196,15 +204,33 @@
     </div>
 
 <script>
-let articles = [];
+// 发刊词数据固定
+let articles = [
+    {
+        title: "发刊词：我们为什么要办这份报刊？",
+        author: "新新青年",
+        cate: "青年观点",
+        content: "为了让更多青年发出自己的声音，为了独立思考，为了不盲从，为了在这个喧嚣的时代里，保留一份清醒与热爱。\n这里是属于我们的阵地，记录思考，分享故事，传递温度。",
+        check: true
+    }
+];
 
+// 加载后台文章（会追加到发刊词后面）
 async function loadData() {
   try {
-    const res = await fetch("admin.html");
+    const res = await fetch("admin.html?t=" + Date.now());
     const text = await res.text();
     const match = text.match(/window\.articleData\s*=\s*(\[[\s\S]*?\]);/);
-    if (match) articles = eval(match[1]);
-  } catch(e) { console.error("加载失败", e); }
+    if (match) {
+      const adminArticles = JSON.parse(match[1]);
+      // 把后台文章追加到发刊词后面（避免重复）
+      adminArticles.forEach(art => {
+        if (art.title !== "发刊词：我们为什么要办这份报刊？") {
+          articles.push(art);
+        }
+      });
+    }
+  } catch(e) { console.error("加载后台文章失败", e); }
   render();
 }
 
