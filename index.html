@@ -756,22 +756,27 @@
     </div>
 
     <!-- 音乐播放器模块 -->
-    <div class="music-module">
-        <div class="music-header">
-            <span class="music-icon">🎵</span>
-            <h3 class="music-module-title">青年之声 · 红色经典</h3>
-        </div>
-        <div class="music-list">
-            <div class="music-item" data-url="https://www.12371.cn/special/zbsh/cyyy/mp3/dfh.mp3">东方红</div>
-            <div class="music-item" data-url="https://www.12371.cn/special/zbsh/cyyy/mp3/gjg.mp3">国际歌</div>
-            <div class="music-item" data-url="https://music.163.com/song/media/outer/url?id=1922608671.mp3">千年的仇要报</div>
-            <div class="music-item" data-url="https://music.163.com/song/media/outer/url?id=25841325.mp3">华沙曲</div>
-        </div>
-        <div class="music-control-group">
-            <button class="music-control-btn" id="playMusicBtn">播放音乐</button>
-            <button class="music-control-btn" id="stopMusicBtn">停止播放</button>
-        </div>
+<div class="music-module">
+    <div class="music-header">
+        <span class="music-icon">🎵</span>
+        <h3 class="music-module-title">青年之声 · 红色经典</h3>
     </div>
+    <div class="music-list" id="musicList">
+        <div class="music-item" data-bvid="BV1MrXKBPEfb">国际歌</div>
+        <div class="music-item" data-bvid="BV1QN411E7Y5">东方红</div>
+        <div class="music-item" data-bvid="BV1nV411Q7t6">华沙曲</div>
+        <div class="music-item" data-bvid="BV1uBcoeMES1">千年的仇要报</div>
+        <div class="music-item" data-bvid="BV1HB4y187p3">祖国不会忘记</div>
+        <div class="music-item" data-bvid="BV1LphEzuEuX">当那一天真的来临</div>
+        <div class="music-item" data-bvid="BV11c411j779">秋收起义</div>
+    </div>
+    <div id="biliPlayer" style="width:100%;height:60px;margin-top:12px;"></div>
+    <div class="music-control-group">
+        <button class="music-control-btn" id="playMusicBtn">播放音乐</button>
+        <button class="music-control-btn" id="stopMusicBtn">停止播放</button>
+    </div>
+</div>
+    
 
     <!-- 发文规则置顶模块 -->
     <div class="rules-top-module">
@@ -853,49 +858,44 @@
 
     <!-- 核心业务逻辑脚本 -->
     <script>
-        // ====================== 音乐播放逻辑 ======================
-        let audioInstance = null;
-        let currentMusicUrl = null;
-        const musicItems = document.querySelectorAll('.music-item');
-        const playMusicBtn = document.getElementById('playMusicBtn');
-        const stopMusicBtn = document.getElementById('stopMusicBtn');
+        // ====================== 音乐播放逻辑（B站嵌入）======================
+let currentBvid = null;
+let playerReady = false;
+const musicItems = document.querySelectorAll('.music-item');
+const playMusicBtn = document.getElementById('playMusicBtn');
+const stopMusicBtn = document.getElementById('stopMusicBtn');
+const biliDiv = document.getElementById('biliPlayer');
 
-        // 音乐选择事件
-        musicItems.forEach(item => {
-            item.addEventListener('click', () => {
-                musicItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                currentMusicUrl = item.dataset.url;
-            });
-        });
+// 加载B站播放器
+function loadBiliPlayer(bvid) {
+    biliDiv.innerHTML = `<iframe src="//player.bilibili.com/player.html?bvid=${bvid}&page=1&autoplay=0&high_quality=1&danmaku=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%;height:60px;"></iframe>`;
+    playerReady = true;
+}
 
-        // 播放音乐
-        playMusicBtn.addEventListener('click', () => {
-            if (!currentMusicUrl) {
-                alert('请先选择一首音乐');
-                return;
-            }
-            if (audioInstance) {
-                audioInstance.pause();
-                audioInstance = null;
-            }
-            try {
-                audioInstance = new Audio(currentMusicUrl);
-                audioInstance.play().catch(err => {
-                    console.log('音乐播放失败，可能受浏览器策略限制', err);
-                });
-            } catch (e) {
-                console.log('音频初始化异常', e);
-            }
-        });
+// 音乐选择事件
+musicItems.forEach(item => {
+    item.addEventListener('click', () => {
+        musicItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        currentBvid = item.dataset.bvid;
+        loadBiliPlayer(currentBvid);
+    });
+});
 
-        // 停止播放
-        stopMusicBtn.addEventListener('click', () => {
-            if (audioInstance) {
-                audioInstance.pause();
-                audioInstance = null;
-            }
-        });
+// 播放音乐（刷新iframe）
+playMusicBtn.addEventListener('click', () => {
+    if (!currentBvid) {
+        alert('请先选择一首音乐');
+        return;
+    }
+    loadBiliPlayer(currentBvid);
+});
+
+// 停止播放（清空iframe）
+stopMusicBtn.addEventListener('click', () => {
+    biliDiv.innerHTML = '';
+    playerReady = false;
+});
 
         // ====================== 文章渲染逻辑 ======================
         const articleListContainer = document.getElementById('articleListContainer');
