@@ -71,9 +71,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>新新青年 - 为青年发声 · 揭露体系沉疴 · 守护国家未来</title>
     <style>
-        /* ==============================================
-           全局基础样式重置模块
-        ============================================== */
         * {
             margin: 0;
             padding: 0;
@@ -100,9 +97,6 @@
             border: none;
             background: none;
         }
-        /* ==============================================
-           页面头部展示区域样式
-        ============================================== */
         .page-header {
             background-color: #ffffff;
             border-radius: 16px;
@@ -126,9 +120,6 @@
             color: #666;
             font-weight: 500;
         }
-        /* ==============================================
-           投稿按钮 & 导航按钮样式
-        ============================================== */
         .contribute-wrapper {
             width: 100%;
             margin-bottom: 20px;
@@ -167,61 +158,6 @@
             background-color: #d9251d;
             color: #fff;
         }
-        /* ==============================================
-           音乐播放器模块样式
-        ============================================== */
-        .music-module {
-            background-color: #fff;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 22px;
-            border: 1px solid #d9251d;
-        }
-        .music-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .music-icon { font-size: 18px; color: #d9251d; }
-        .music-module-title { font-size: 16px; font-weight: 700; color: #d9251d; }
-        .music-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-        .music-item {
-            padding: 9px 14px;
-            background-color: #fef2f2;
-            color: #d9251d;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .music-item:hover { background-color: #fde2e2; }
-        .music-item.active {
-            background-color: #d9251d;
-            color: #fff;
-        }
-        .music-control-group {
-            display: flex;
-            gap: 12px;
-        }
-        .music-control-btn {
-            flex: 1;
-            height: 42px;
-            background-color: #d9251d;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 10px;
-        }
-        /* ==============================================
-           发文规则置顶模块样式
-        ============================================== */
         .rules-top-module {
             background-color: #fff;
             border-radius: 18px;
@@ -266,9 +202,6 @@
             font-weight: 700;
             color: #d9251d;
         }
-        /* ==============================================
-           文章列表 & 分页样式
-        ============================================== */
         .article-list-header {
             font-size: 19px;
             font-weight: 700;
@@ -395,7 +328,6 @@
             text-align: center;
             color: #999;
         }
-        /* 弹窗样式 */
         .article-modal {
             position: fixed;
             top: 0;
@@ -471,8 +403,6 @@
         }
         .dark-mode-toggle {
             position: fixed;
-            right: 20px;
-            bottom: 80px;
             width: 50px;
             height: 50px;
             background-color: #d9251d;
@@ -482,18 +412,19 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            cursor: pointer;
+            cursor: grab;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: box-shadow 0.2s;
         }
-        .dark-mode-toggle:hover { transform: scale(1.05); }
+        .dark-mode-toggle:active {
+            cursor: grabbing;
+        }
         body.dark-mode {
             background-color: #1a1a1a;
             color: #e0e0e0;
         }
         body.dark-mode .page-header,
-        body.dark-mode .music-module,
         body.dark-mode .rules-top-module,
         body.dark-mode .category-tabs,
         body.dark-mode .article-card,
@@ -532,8 +463,6 @@
             .article-card-title { font-size: 18px; }
             .modal-title { font-size: 20px; }
             .contribute-btn { height: 50px; font-size: 17px; }
-            .music-control-group { flex-direction: column; gap: 8px; }
-            .music-control-btn { height: 40px; }
         }
     </style>
 </head>
@@ -543,7 +472,15 @@
     <div style="display:flex;align-items:center;justify-content:center;gap:15px;">
         <svg width="75" height="75" viewBox="0 0 200 200">
             <rect x="10" y="10" width="180" height="180" rx="8" fill="none" stroke="#d9251d" stroke-width="6"/>
-            <text x="100" y="135" font-size="45" font-weight="900" fill="#d9251d" text-anchor="middle">新新</text>
+            <rect x="20" y="20" width="160" height="160" rx="5" fill="none" stroke="#d9251d" stroke-width="3"/>
+            <line x1="30" y1="45" x2="170" y2="45" stroke="#d9251d" stroke-width="4"/>
+            <line x1="30" y1="58" x2="170" y2="58" stroke="#d9251d" stroke-width="2"/>
+            <text x="100" y="105" font-size="45" font-weight="900" fill="#d9251d" text-anchor="middle" font-family="SimHei,Microsoft YaHei,sans-serif">新新</text>
+            <text x="100" y="155" font-size="45" font-weight="900" fill="#d9251d" text-anchor="middle" font-family="SimHei,Microsoft YaHei,sans-serif">青年</text>
+            <line x1="110" y1="80" x2="170" y2="80" stroke="#d9251d" stroke-width="3"/>
+            <line x1="110" y1="100" x2="170" y2="100" stroke="#d9251d" stroke-width="3"/>
+            <line x1="110" y1="120" x2="170" y2="120" stroke="#d9251d" stroke-width="3"/>
+            <line x1="110" y1="140" x2="170" y2="140" stroke="#d9251d" stroke-width="3"/>
         </svg>
         <h1 class="site-title">新新青年</h1>
     </div>
@@ -554,35 +491,11 @@
     <a href="https://wj.qq.com/s2/26084616/2a3d" target="_blank" class="contribute-btn">我要发声 · 投稿文章</a>
 </div>
 
-<!-- 导航按钮 -->
 <div class="nav-buttons">
     <button class="nav-btn" data-target="rules">📜 发文公约</button>
     <button class="nav-btn" data-target="articles">📰 文章广场</button>
 </div>
 
-<!-- 音乐播放器模块 -->
-<div class="music-module">
-    <div class="music-header">
-        <span class="music-icon">🎵</span>
-        <h3 class="music-module-title">青年之声 · 红色经典</h3>
-    </div>
-    <div class="music-list" id="musicList">
-        <div class="music-item" data-bvid="BV1jNM2eWEcF">国际歌</div>
-        <div class="music-item" data-bvid="BV1BX4y187af">东方红</div>
-        <div class="music-item" data-bvid="BV1qC4y1P7Vd">华沙曲</div>
-        <div class="music-item" data-bvid="BV1b94y1S7Vp">千年的仇要报</div>
-        <div class="music-item" data-bvid="BV1saYNeAEHq">祖国不会忘记</div>
-        <div class="music-item" data-bvid="BV1us411A7SV">当那一天真的来临</div>
-        <div class="music-item" data-bvid="BV1eC4y1W7qv">秋收起义</div>
-    </div>
-    <div id="biliPlayer" style="width:100%;height:60px;margin-top:12px;"></div>
-    <div class="music-control-group">
-        <button class="music-control-btn" id="playMusicBtn">播放音乐</button>
-        <button class="music-control-btn" id="stopMusicBtn">停止播放</button>
-    </div>
-</div>
-
-<!-- 发文规则置顶模块 -->
 <div class="rules-top-module">
     <h2 class="rules-main-title">📜 新新青年发声公约</h2>
     <div class="rule-item"><strong>一、为青年发声，捍卫青年权益</strong>聚焦青年成长困境，揭露教育内卷、衡水模式等体系沉疴。</div>
@@ -594,7 +507,6 @@
     <div class="rules-conclusion">青年强则国家强，青年醒则民族醒<br>愿我们以笔为剑，为青年发声，为未来开路</div>
 </div>
 
-<!-- 文章广场 -->
 <h2 class="article-list-header">青年发声 · 文章广场</h2>
 <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索文章、观点或关键词">
 
@@ -615,7 +527,6 @@
     <button id="nextPageBtn" class="pagination-btn" disabled>下一页 ›</button>
 </div>
 
-<!-- 弹窗 -->
 <div class="article-modal" id="articleModal">
     <div class="modal-container">
         <div class="modal-header">
@@ -642,33 +553,7 @@
 <div class="reading-progress" id="readingProgress"></div>
 
 <script>
-    // ====================== 音乐播放逻辑 ======================
-    let currentBvid = null;
-    const musicItems = document.querySelectorAll('.music-item');
-    const playMusicBtn = document.getElementById('playMusicBtn');
-    const stopMusicBtn = document.getElementById('stopMusicBtn');
-    const biliDiv = document.getElementById('biliPlayer');
-
-    function loadBiliPlayer(bvid) {
-        biliDiv.innerHTML = `<iframe src="//player.bilibili.com/player.html?bvid=${bvid}&page=1&autoplay=0&high_quality=1&danmaku=0" scrolling="no" frameborder="no" style="width:100%;height:60px;"></iframe>`;
-    }
-
-    musicItems.forEach(item => {
-        item.addEventListener('click', () => {
-            musicItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            currentBvid = item.dataset.bvid;
-            loadBiliPlayer(currentBvid);
-        });
-    });
-
-    playMusicBtn.addEventListener('click', () => {
-        if (!currentBvid) { alert('请先选择一首音乐'); return; }
-        loadBiliPlayer(currentBvid);
-    });
-    stopMusicBtn.addEventListener('click', () => { biliDiv.innerHTML = ''; });
-
-    // ====================== 文章分页、深色模式、进度条、随机等 ======================
+    // ====================== 文章分页、深色模式、进度条、随机、拖动深色按钮 ======================
     const articleListContainer = document.getElementById('articleListContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryTabs = document.querySelectorAll('.category-tab');
@@ -683,6 +568,59 @@
     let currentPage = 1;
     const pageSize = 5;
     let currentFilteredArticles = [];
+
+    // 深色按钮拖动逻辑
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    // 读取保存的位置
+    const savedLeft = localStorage.getItem('darkModeLeft');
+    const savedTop = localStorage.getItem('darkModeTop');
+    if (savedLeft && savedTop) {
+        darkModeToggle.style.left = savedLeft;
+        darkModeToggle.style.top = savedTop;
+        darkModeToggle.style.right = 'auto';
+        darkModeToggle.style.bottom = 'auto';
+    } else {
+        // 默认位置：右下角，距底部80px，右边20px
+        darkModeToggle.style.right = '20px';
+        darkModeToggle.style.bottom = '80px';
+    }
+
+    darkModeToggle.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        darkModeToggle.style.cursor = 'grabbing';
+        // 计算鼠标相对于元素左上角的偏移
+        const rect = darkModeToggle.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        darkModeToggle.style.transition = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        let left = e.clientX - offsetX;
+        let top = e.clientY - offsetY;
+        // 限制边界，避免拖出屏幕
+        left = Math.min(window.innerWidth - darkModeToggle.offsetWidth, Math.max(0, left));
+        top = Math.min(window.innerHeight - darkModeToggle.offsetHeight, Math.max(0, top));
+        darkModeToggle.style.left = left + 'px';
+        darkModeToggle.style.top = top + 'px';
+        darkModeToggle.style.right = 'auto';
+        darkModeToggle.style.bottom = 'auto';
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            darkModeToggle.style.cursor = 'grab';
+            darkModeToggle.style.transition = '';
+            // 保存位置
+            localStorage.setItem('darkModeLeft', darkModeToggle.style.left);
+            localStorage.setItem('darkModeTop', darkModeToggle.style.top);
+        }
+    });
 
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
@@ -750,7 +688,6 @@
     function goPrevPage() { if (currentPage > 1) { currentPage--; renderArticleList(); } }
     function goNextPage() { const totalPages = Math.ceil(currentFilteredArticles.length / pageSize); if (currentPage < totalPages) { currentPage++; renderArticleList(); } }
 
-    // 随机文章
     function randomArticle() {
         if (articleData.length === 0) return;
         const randomIndex = Math.floor(Math.random() * articleData.length);
@@ -763,13 +700,12 @@
         document.body.style.overflow = 'hidden';
     }
 
-    // 深色模式切换
-    darkModeToggle.addEventListener('click', () => {
+    darkModeToggle.addEventListener('click', (e) => {
+        if (isDragging) return;
         document.body.classList.toggle('dark-mode');
         darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
     });
 
-    // 阅读进度条
     window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -777,7 +713,6 @@
         readingProgress.style.width = scrolled + '%';
     });
 
-    // 导航滚动
     const navBtns = document.querySelectorAll('.nav-btn');
     navBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -806,4 +741,4 @@
     window.addEventListener('DOMContentLoaded', renderArticleList);
 </script>
 </body>
-</html>
+    </html>
