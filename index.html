@@ -69,7 +69,7 @@
     <meta name="copyright" content="新新青年 版权所有 2026">
     <meta name="robots" content="index,follow">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>新新青年 - 为青年发声</title>
+    <title>新新青年 - 为青年发声 · 揭露体系沉疴 · 守护国家未来</title>
     <style>
         /* ==============================================
            全局基础样式重置模块
@@ -372,6 +372,22 @@
             opacity: 0.4;
             cursor: not-allowed;
         }
+        .random-btn {
+            margin-left: auto;
+            padding: 8px 16px;
+            background-color: #d9251d;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .random-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
         .empty-article-tip {
             background-color: #fff;
             border-radius: 14px;
@@ -453,6 +469,56 @@
             opacity: 1;
             pointer-events: auto;
         }
+        .dark-mode-toggle {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            width: 50px;
+            height: 50px;
+            background-color: #d9251d;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .dark-mode-toggle:hover { transform: scale(1.05); }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        body.dark-mode .page-header,
+        body.dark-mode .music-module,
+        body.dark-mode .rules-top-module,
+        body.dark-mode .category-tabs,
+        body.dark-mode .article-card,
+        body.dark-mode .modal-container,
+        body.dark-mode .nav-btn,
+        body.dark-mode .pagination-btn,
+        body.dark-mode .search-input {
+            background-color: #2a2a2a;
+            border-color: #d9251d;
+            color: #e0e0e0;
+        }
+        body.dark-mode .article-author,
+        body.dark-mode .article-card-meta,
+        body.dark-mode .modal-meta { color: #aaa; }
+        body.dark-mode .search-input::placeholder { color: #888; }
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background-color: #d9251d;
+            z-index: 10000;
+            transition: width 0.1s;
+        }
         .page-footer {
             margin-top: 40px;
             padding-top: 26px;
@@ -460,6 +526,14 @@
             text-align: center;
             color: #999;
             font-size: 14px;
+        }
+        @media (max-width: 480px) {
+            .site-title { font-size: 28px; }
+            .article-card-title { font-size: 18px; }
+            .modal-title { font-size: 20px; }
+            .contribute-btn { height: 50px; font-size: 17px; }
+            .music-control-group { flex-direction: column; gap: 8px; }
+            .music-control-btn { height: 40px; }
         }
     </style>
 </head>
@@ -480,7 +554,7 @@
     <a href="https://wj.qq.com/s2/26084616/2a3d" target="_blank" class="contribute-btn">我要发声 · 投稿文章</a>
 </div>
 
-<!-- 快捷导航按钮 -->
+<!-- 导航按钮 -->
 <div class="nav-buttons">
     <button class="nav-btn" data-target="rules">📜 发文公约</button>
     <button class="nav-btn" data-target="articles">📰 文章广场</button>
@@ -531,6 +605,7 @@
     <div class="category-tab" data-cate="教育反思">教育反思</div>
     <div class="category-tab" data-cate="行动倡议">行动倡议</div>
     <div class="category-tab" data-cate="其他">其他</div>
+    <button class="random-btn" id="randomBtn">🎲 随机看看</button>
 </div>
 
 <div id="articleListContainer"></div>
@@ -561,10 +636,13 @@
     <div class="copyright">© 2026 新新青年 为青年发声</div>
     <div class="footer-slogan">青年者，国家之魂；守护青年，即是守护未来</div>
 </footer>
+
 <div class="back-top-btn" id="backTopBtn">↑</div>
+<div class="dark-mode-toggle" id="darkModeToggle">🌙</div>
+<div class="reading-progress" id="readingProgress"></div>
 
 <script>
-    // 音乐播放逻辑
+    // ====================== 音乐播放逻辑 ======================
     let currentBvid = null;
     const musicItems = document.querySelectorAll('.music-item');
     const playMusicBtn = document.getElementById('playMusicBtn');
@@ -590,20 +668,27 @@
     });
     stopMusicBtn.addEventListener('click', () => { biliDiv.innerHTML = ''; });
 
-    // 文章分页逻辑
+    // ====================== 文章分页、深色模式、进度条、随机等 ======================
     const articleListContainer = document.getElementById('articleListContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryTabs = document.querySelectorAll('.category-tab');
     const articleModal = document.getElementById('articleModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const backTopBtn = document.getElementById('backTopBtn');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const readingProgress = document.getElementById('readingProgress');
+    const randomBtn = document.getElementById('randomBtn');
 
     const articleData = window.articleData || [];
     let currentPage = 1;
     const pageSize = 5;
     let currentFilteredArticles = [];
 
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); }); }
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;');
+        });
+    }
 
     function renderArticleList() {
         const keyword = searchInput.value.trim().toLowerCase();
@@ -617,6 +702,8 @@
 
         const totalPages = Math.ceil(currentFilteredArticles.length / pageSize);
         if (currentPage > totalPages) currentPage = totalPages || 1;
+        if (currentPage < 1) currentPage = 1;
+
         const start = (currentPage - 1) * pageSize;
         const pageArticles = currentFilteredArticles.slice(start, start + pageSize);
 
@@ -629,7 +716,8 @@
 
         let html = '';
         pageArticles.forEach(article => {
-            html += `<div class="article-card" data-index="${currentFilteredArticles.indexOf(article)}">
+            const originalIndex = currentFilteredArticles.indexOf(article);
+            html += `<div class="article-card" data-index="${originalIndex}">
                         <h3 class="article-card-title">${escapeHtml(article.title)}</h3>
                         <div class="article-card-meta">
                             <span>作者：${escapeHtml(article.author || '匿名青年')}</span>
@@ -647,6 +735,7 @@
         document.querySelectorAll('.article-card').forEach(card => {
             card.addEventListener('click', () => {
                 const data = currentFilteredArticles[parseInt(card.dataset.index)];
+                if (!data) return;
                 document.getElementById('modalArticleTitle').innerText = data.title;
                 document.getElementById('modalArticleAuthor').innerText = `作者：${data.author || '匿名青年'}`;
                 document.getElementById('modalArticleCategory').innerText = `分类：${data.cate}`;
@@ -661,6 +750,43 @@
     function goPrevPage() { if (currentPage > 1) { currentPage--; renderArticleList(); } }
     function goNextPage() { const totalPages = Math.ceil(currentFilteredArticles.length / pageSize); if (currentPage < totalPages) { currentPage++; renderArticleList(); } }
 
+    // 随机文章
+    function randomArticle() {
+        if (articleData.length === 0) return;
+        const randomIndex = Math.floor(Math.random() * articleData.length);
+        const article = articleData[randomIndex];
+        document.getElementById('modalArticleTitle').innerText = article.title;
+        document.getElementById('modalArticleAuthor').innerText = `作者：${article.author || '匿名青年'}`;
+        document.getElementById('modalArticleCategory').innerText = `分类：${article.cate}`;
+        document.getElementById('modalArticleContent').innerText = article.content;
+        articleModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 深色模式切换
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+
+    // 阅读进度条
+    window.addEventListener('scroll', () => {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        readingProgress.style.width = scrolled + '%';
+    });
+
+    // 导航滚动
+    const navBtns = document.querySelectorAll('.nav-btn');
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.target;
+            const element = target === 'rules' ? document.querySelector('.rules-top-module') : document.querySelector('.article-list-header');
+            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
     closeModalBtn.addEventListener('click', () => { articleModal.classList.remove('show'); document.body.style.overflow = 'auto'; });
     articleModal.addEventListener('click', (e) => { if (e.target === articleModal) { articleModal.classList.remove('show'); document.body.style.overflow = 'auto'; } });
     searchInput.addEventListener('input', resetAndRender);
@@ -671,20 +797,11 @@
             resetAndRender();
         });
     });
-    window.addEventListener('scroll', () => { if (window.scrollY > 300) backTopBtn.classList.add('show'); else backTopBtn.classList.remove('show'); });
+    window.addEventListener('scroll', () => { backTopBtn.classList.toggle('show', window.scrollY > 300); });
     backTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
     document.getElementById('prevPageBtn').addEventListener('click', goPrevPage);
     document.getElementById('nextPageBtn').addEventListener('click', goNextPage);
-
-    // 导航按钮滚动
-    const navBtns = document.querySelectorAll('.nav-btn');
-    navBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const target = btn.dataset.target;
-            let element = target === 'rules' ? document.querySelector('.rules-top-module') : document.querySelector('.article-list-header');
-            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    });
+    randomBtn.addEventListener('click', randomArticle);
 
     window.addEventListener('DOMContentLoaded', renderArticleList);
 </script>
