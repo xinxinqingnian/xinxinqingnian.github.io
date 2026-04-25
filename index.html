@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <script>
-    window.articleData = [{
+    // ========== 本地备份数据（Supabase 降级用）==========
+    window.backupArticleData = [{
     "title": "红墙",
     "author": "匿名",
     "cate": "其他",
@@ -61,6 +62,8 @@
   }
 ];
     </script>
+    <!-- Supabase 客户端库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="description" content="新新青年官方平台，为青年发声，揭露教育与社会体系的沉疴，守护青年权益，捍卫国家未来。">
@@ -137,6 +140,7 @@
             border-radius: 16px;
             text-decoration: none;
             transition: all 0.25s ease;
+            cursor: pointer;
         }
         .nav-buttons {
             display: flex;
@@ -458,6 +462,73 @@
             color: #999;
             font-size: 14px;
         }
+        /* 投稿弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .contribute-modal {
+            background: #fff;
+            max-width: 500px;
+            width: 90%;
+            border-radius: 20px;
+            padding: 24px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        body.dark-mode .contribute-modal {
+            background: #2a2a2a;
+            color: #e0e0e0;
+        }
+        .contribute-modal h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #d9251d;
+        }
+        .contribute-modal input, .contribute-modal select, .contribute-modal textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f9fafb;
+        }
+        body.dark-mode .contribute-modal input,
+        body.dark-mode .contribute-modal select,
+        body.dark-mode .contribute-modal textarea {
+            background: #1a1a1a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        .contribute-modal button {
+            width: 100%;
+            padding: 14px;
+            background: #d9251d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
         @media (max-width: 480px) {
             .site-title { font-size: 28px; }
             .article-card-title { font-size: 18px; }
@@ -488,7 +559,26 @@
 </header>
 
 <div class="contribute-wrapper">
-    <a href="https://wj.qq.com/s2/26084616/2a3d" target="_blank" class="contribute-btn">我要发声 · 投稿文章</a>
+    <a href="javascript:void(0)" id="openContributeBtn" class="contribute-btn">我要发声 · 投稿文章</a>
+</div>
+
+<!-- 投稿弹窗 -->
+<div id="contributeModal" class="modal-overlay">
+    <div class="contribute-modal">
+        <span class="close-modal" id="closeModalBtn2">&times;</span>
+        <h3>✍️ 投稿文章</h3>
+        <input type="text" id="postTitle" placeholder="标题 *">
+        <input type="text" id="postAuthor" placeholder="作者 *">
+        <select id="postCategory">
+            <option value="青年观点">青年观点</option>
+            <option value="批判揭露">批判揭露</option>
+            <option value="教育反思">教育反思</option>
+            <option value="行动倡议">行动倡议</option>
+            <option value="其他">其他</option>
+        </select>
+        <textarea id="postContent" rows="8" placeholder="正文 *"></textarea>
+        <button id="submitPostBtn">提交投稿</button>
+    </div>
 </div>
 
 <div class="nav-buttons">
@@ -553,6 +643,11 @@
 <div class="reading-progress" id="readingProgress"></div>
 
 <script>
+    // ====================== Supabase 初始化 ======================
+    const supabaseUrl = 'https://koiakmpmqcnmzqmxjcqh.supabase.co';
+    const supabaseAnonKey = 'sb_publishable_L0gAHgGrnER0ARa4qVXQCg_lqM_ZEXI';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
     // ====================== 文章分页、深色模式、进度条、随机、拖动深色按钮 ======================
     const articleListContainer = document.getElementById('articleListContainer');
     const searchInput = document.getElementById('searchInput');
@@ -563,8 +658,14 @@
     const darkModeToggle = document.getElementById('darkModeToggle');
     const readingProgress = document.getElementById('readingProgress');
     const randomBtn = document.getElementById('randomBtn');
+    
+    // 投稿弹窗元素
+    const contributeModal = document.getElementById('contributeModal');
+    const openContributeBtn = document.getElementById('openContributeBtn');
+    const closeModalBtn2 = document.getElementById('closeModalBtn2');
+    const submitPostBtn = document.getElementById('submitPostBtn');
 
-    const articleData = window.articleData || [];
+    const backupData = window.backupArticleData || [];
     let currentPage = 1;
     const pageSize = 5;
     let currentFilteredArticles = [];
@@ -572,8 +673,6 @@
     // 深色按钮拖动逻辑
     let isDragging = false;
     let offsetX, offsetY;
-
-    // 读取保存的位置
     const savedLeft = localStorage.getItem('darkModeLeft');
     const savedTop = localStorage.getItem('darkModeTop');
     if (savedLeft && savedTop) {
@@ -582,7 +681,6 @@
         darkModeToggle.style.right = 'auto';
         darkModeToggle.style.bottom = 'auto';
     } else {
-        // 默认位置：右下角，距底部80px，右边20px
         darkModeToggle.style.right = '20px';
         darkModeToggle.style.bottom = '80px';
     }
@@ -590,7 +688,6 @@
     darkModeToggle.addEventListener('mousedown', (e) => {
         isDragging = true;
         darkModeToggle.style.cursor = 'grabbing';
-        // 计算鼠标相对于元素左上角的偏移
         const rect = darkModeToggle.getBoundingClientRect();
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
@@ -602,7 +699,6 @@
         e.preventDefault();
         let left = e.clientX - offsetX;
         let top = e.clientY - offsetY;
-        // 限制边界，避免拖出屏幕
         left = Math.min(window.innerWidth - darkModeToggle.offsetWidth, Math.max(0, left));
         top = Math.min(window.innerHeight - darkModeToggle.offsetHeight, Math.max(0, top));
         darkModeToggle.style.left = left + 'px';
@@ -616,42 +712,65 @@
             isDragging = false;
             darkModeToggle.style.cursor = 'grab';
             darkModeToggle.style.transition = '';
-            // 保存位置
             localStorage.setItem('darkModeLeft', darkModeToggle.style.left);
             localStorage.setItem('darkModeTop', darkModeToggle.style.top);
         }
     });
 
     function escapeHtml(str) {
+        if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
             return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;');
         });
     }
 
-    function renderArticleList() {
+    // 从 Supabase 读取文章（check = true）
+    async function fetchArticlesFromSupabase() {
+        try {
+            const { data, error } = await supabase
+                .from('articles')
+                .select('*')
+                .eq('check', true)
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            return data || [];
+        } catch (e) {
+            console.warn('Supabase 读取失败，使用本地备份', e);
+            return backupData.filter(a => a.check === true);
+        }
+    }
+
+    async function renderArticleList() {
         const keyword = searchInput.value.trim().toLowerCase();
         const activeCategory = document.querySelector('.category-tab.active').dataset.cate;
-
-        currentFilteredArticles = articleData.filter(item => {
-            if (!item.check) return false;
+        
+        // 从 Supabase 获取文章
+        let articles = await fetchArticlesFromSupabase();
+        
+        // 分类和关键词筛选
+        let filtered = articles.filter(item => {
             if (activeCategory !== 'all' && item.cate !== activeCategory) return false;
-            return item.title.toLowerCase().includes(keyword) || item.content.toLowerCase().includes(keyword) || (item.author || '').toLowerCase().includes(keyword);
+            if (keyword) {
+                return (item.title || '').toLowerCase().includes(keyword) || 
+                       (item.content || '').toLowerCase().includes(keyword) || 
+                       (item.author || '').toLowerCase().includes(keyword);
+            }
+            return true;
         });
-
+        
+        currentFilteredArticles = filtered;
         const totalPages = Math.ceil(currentFilteredArticles.length / pageSize);
         if (currentPage > totalPages) currentPage = totalPages || 1;
-        if (currentPage < 1) currentPage = 1;
-
         const start = (currentPage - 1) * pageSize;
         const pageArticles = currentFilteredArticles.slice(start, start + pageSize);
-
+        
         if (currentFilteredArticles.length === 0) {
             articleListContainer.innerHTML = '<div class="empty-article-tip">暂无发声内容，期待你的第一篇投稿</div>';
             document.getElementById('paginationContainer').style.display = 'none';
             return;
         }
         document.getElementById('paginationContainer').style.display = 'flex';
-
+        
         let html = '';
         pageArticles.forEach(article => {
             const originalIndex = currentFilteredArticles.indexOf(article);
@@ -661,15 +780,15 @@
                             <span>作者：${escapeHtml(article.author || '匿名青年')}</span>
                             <span class="article-category-tag">${escapeHtml(article.cate)}</span>
                         </div>
-                        <div class="article-card-excerpt">${escapeHtml(article.content.slice(0, 130))}${article.content.length > 130 ? '...' : ''}</div>
+                        <div class="article-card-excerpt">${escapeHtml((article.content || '').slice(0, 130))}${(article.content || '').length > 130 ? '...' : ''}</div>
                     </div>`;
         });
         articleListContainer.innerHTML = html;
-
+        
         document.getElementById('pageInfo').innerText = `第 ${currentPage} / ${totalPages} 页`;
         document.getElementById('prevPageBtn').disabled = (currentPage <= 1);
         document.getElementById('nextPageBtn').disabled = (currentPage >= totalPages);
-
+        
         document.querySelectorAll('.article-card').forEach(card => {
             card.addEventListener('click', () => {
                 const data = currentFilteredArticles[parseInt(card.dataset.index)];
@@ -688,10 +807,12 @@
     function goPrevPage() { if (currentPage > 1) { currentPage--; renderArticleList(); } }
     function goNextPage() { const totalPages = Math.ceil(currentFilteredArticles.length / pageSize); if (currentPage < totalPages) { currentPage++; renderArticleList(); } }
 
-    function randomArticle() {
-        if (articleData.length === 0) return;
-        const randomIndex = Math.floor(Math.random() * articleData.length);
-        const article = articleData[randomIndex];
+    async function randomArticle() {
+        let articles = await fetchArticlesFromSupabase();
+        if (!articles.length) articles = backupData.filter(a => a.check === true);
+        if (articles.length === 0) return;
+        const randomIndex = Math.floor(Math.random() * articles.length);
+        const article = articles[randomIndex];
         document.getElementById('modalArticleTitle').innerText = article.title;
         document.getElementById('modalArticleAuthor').innerText = `作者：${article.author || '匿名青年'}`;
         document.getElementById('modalArticleCategory').innerText = `分类：${article.cate}`;
@@ -738,7 +859,44 @@
     document.getElementById('nextPageBtn').addEventListener('click', goNextPage);
     randomBtn.addEventListener('click', randomArticle);
 
+    // 投稿弹窗逻辑
+    openContributeBtn.addEventListener('click', () => {
+        contributeModal.classList.add('active');
+    });
+    closeModalBtn2.addEventListener('click', () => {
+        contributeModal.classList.remove('active');
+    });
+    contributeModal.addEventListener('click', (e) => {
+        if (e.target === contributeModal) contributeModal.classList.remove('active');
+    });
+    submitPostBtn.addEventListener('click', async () => {
+        const title = document.getElementById('postTitle').value.trim();
+        const author = document.getElementById('postAuthor').value.trim();
+        const cate = document.getElementById('postCategory').value;
+        const content = document.getElementById('postContent').value.trim();
+        if (!title || !author || !content) {
+            alert('请完整填写标题、作者和内容');
+            return;
+        }
+        try {
+            const { error } = await supabase
+                .from('articles')
+                .insert([{ title, author, cate, content, check: false, likes_count: 0 }]);
+            if (error) throw error;
+            alert('投稿成功！等待管理员审核后即可显示');
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postAuthor').value = '';
+            document.getElementById('postContent').value = '';
+            contributeModal.classList.remove('active');
+            // 刷新列表（如果当前在已发布文章列表，新投稿不显示，但用户能感知提交成功）
+            renderArticleList();
+        } catch (e) {
+            console.error('投稿失败', e);
+            alert('投稿失败，请稍后重试或联系管理员');
+        }
+    });
+
     window.addEventListener('DOMContentLoaded', renderArticleList);
 </script>
 </body>
-    </html>
+</html>
