@@ -243,11 +243,16 @@
             font-size: 14px;
             border-radius: 999px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         .category-tab.active {
             background-color: #d9251d;
             color: #fff;
             border-color: #d9251d;
+        }
+        /* 移动端文章卡片单列（默认） */
+        #articleListContainer {
+            display: block;
         }
         .article-card {
             background-color: #fff;
@@ -307,6 +312,7 @@
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         .pagination-btn:disabled {
             opacity: 0.4;
@@ -386,6 +392,8 @@
             color: #fff;
             font-size: 15px;
             border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
         .back-top-btn {
             position: fixed;
@@ -465,11 +473,92 @@
             color: #999;
             font-size: 14px;
         }
+        /* 移动端基础调整 */
         @media (max-width: 480px) {
             .site-title { font-size: 28px; }
             .article-card-title { font-size: 18px; }
             .modal-title { font-size: 20px; }
             .contribute-btn { height: 50px; font-size: 17px; }
+            .category-tab { padding: 6px 12px; font-size: 13px; }
+            .pagination-btn { padding: 6px 14px; font-size: 13px; }
+            .dark-mode-toggle { width: 44px; height: 44px; font-size: 18px; right: 16px; bottom: 70px; }
+            .back-top-btn { width: 44px; height: 44px; font-size: 20px; }
+        }
+        @media (max-width: 360px) {
+            body { padding: 10px; }
+            .site-title { font-size: 24px; }
+        }
+        
+        /* ========== PC 端优化 (屏幕宽度 ≥ 1024px) ========== */
+        @media (min-width: 1024px) {
+            body {
+                max-width: 1400px;
+                padding: 20px 40px;
+            }
+            /* 文章网格布局：2列 */
+            #articleListContainer {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 28px;
+            }
+            .article-card {
+                margin-bottom: 0;  /* 网格 gap 已提供间距 */
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
+            }
+            .article-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+            }
+            /* 分页区域上边距调整 */
+            .pagination-container {
+                margin-top: 50px;
+            }
+            /* 深色模式按钮稍大，位置微调 */
+            .dark-mode-toggle {
+                width: 60px;
+                height: 60px;
+                font-size: 26px;
+                right: 40px;
+                bottom: 110px;
+            }
+            /* 弹窗最大宽度增加 */
+            .modal-container {
+                max-width: 920px;
+            }
+            /* 导航按钮和分类标签可居中 */
+            .nav-buttons {
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .category-tabs {
+                justify-content: center;
+            }
+            /* 增大卡片内边距，提升桌面阅读体验 */
+            .article-card {
+                padding: 28px;
+            }
+            .article-card-title {
+                font-size: 22px;
+            }
+            .search-input {
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            /* 发文公约区域可加宽内边距 */
+            .rules-top-module {
+                padding: 36px 32px;
+            }
+        }
+        /* 超大屏幕（≥1600px）可调为3列，按需启用 */
+        @media (min-width: 1600px) {
+            #articleListContainer {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            body {
+                max-width: 1600px;
+            }
         }
     </style>
 </head>
@@ -576,11 +665,9 @@
     const pageSize = 5;
     let currentFilteredArticles = [];
 
-    // 深色按钮拖动逻辑
+    // 深色按钮拖动逻辑（同时支持鼠标和触摸）
     let isDragging = false;
     let offsetX, offsetY;
-
-    // 读取保存的位置
     const savedLeft = localStorage.getItem('darkModeLeft');
     const savedTop = localStorage.getItem('darkModeTop');
     if (savedLeft && savedTop) {
@@ -589,45 +676,52 @@
         darkModeToggle.style.right = 'auto';
         darkModeToggle.style.bottom = 'auto';
     } else {
-        // 默认位置：右下角，距底部80px，右边20px
         darkModeToggle.style.right = '20px';
         darkModeToggle.style.bottom = '80px';
     }
 
-    darkModeToggle.addEventListener('mousedown', (e) => {
+    function startDrag(e) {
         isDragging = true;
         darkModeToggle.style.cursor = 'grabbing';
-        // 计算鼠标相对于元素左上角的偏移
+        let clientX, clientY;
+        if (e.type === 'mousedown') { clientX = e.clientX; clientY = e.clientY; }
+        else { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
         const rect = darkModeToggle.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+        offsetX = clientX - rect.left;
+        offsetY = clientY - rect.top;
         darkModeToggle.style.transition = 'none';
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
         e.preventDefault();
-        let left = e.clientX - offsetX;
-        let top = e.clientY - offsetY;
-        // 限制边界，避免拖出屏幕
+    }
+    function onDrag(e) {
+        if (!isDragging) return;
+        let clientX, clientY;
+        if (e.type === 'mousemove') { clientX = e.clientX; clientY = e.clientY; }
+        else { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+        let left = clientX - offsetX;
+        let top = clientY - offsetY;
         left = Math.min(window.innerWidth - darkModeToggle.offsetWidth, Math.max(0, left));
         top = Math.min(window.innerHeight - darkModeToggle.offsetHeight, Math.max(0, top));
         darkModeToggle.style.left = left + 'px';
         darkModeToggle.style.top = top + 'px';
         darkModeToggle.style.right = 'auto';
         darkModeToggle.style.bottom = 'auto';
-    });
-
-    window.addEventListener('mouseup', () => {
+        e.preventDefault();
+    }
+    function stopDrag() {
         if (isDragging) {
             isDragging = false;
             darkModeToggle.style.cursor = 'grab';
             darkModeToggle.style.transition = '';
-            // 保存位置
             localStorage.setItem('darkModeLeft', darkModeToggle.style.left);
             localStorage.setItem('darkModeTop', darkModeToggle.style.top);
         }
-    });
+    }
+    darkModeToggle.addEventListener('mousedown', startDrag);
+    darkModeToggle.addEventListener('touchstart', startDrag);
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('touchmove', onDrag);
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('touchend', stopDrag);
 
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
@@ -748,4 +842,4 @@
     window.addEventListener('DOMContentLoaded', renderArticleList);
 </script>
 </body>
-    </html>
+</html>
