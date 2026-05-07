@@ -808,11 +808,28 @@
         document.body.style.overflow = 'hidden';
     }
 
-    darkModeToggle.addEventListener('click', (e) => {
-        if (isDragging) return;
-        document.body.classList.toggle('dark-mode');
-        darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
+    let dragActive = false;
+let dragStartX = 0, dragStartY = 0;
+
+darkModeToggle.addEventListener('touchstart', (e) => {
+    dragStartX = e.touches[0].clientX;
+    dragStartY = e.touches[0].clientY;
+    dragActive = false;
+});
+
+darkModeToggle.addEventListener('touchmove', (e) => {
+    let dx = e.touches[0].clientX - dragStartX;
+    let dy = e.touches[0].clientY - dragStartY;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        dragActive = true;
+    }
+});
+
+darkModeToggle.addEventListener('click', (e) => {
+    if (dragActive) return;
+    document.body.classList.toggle('dark-mode');
+    darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
 
     window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop;
