@@ -423,95 +423,7 @@
             opacity: 1;
             pointer-events: auto;
         }
-        .dark-mode-toggle {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            background-color: #d9251d;
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: grab;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            transition: box-shadow 0.2s;
-        }
-        .dark-mode-toggle:active {
-            cursor: grabbing;
-        }
-        一body.dark-mode {
-    background-color: #0f0f0f;
-    color: #e8e8e8;
-}
-body.dark-mode .page-header,
-body.dark-mode .rules-top-module,
-body.dark-mode .category-tabs,
-body.dark-mode .article-card,
-body.dark-mode .modal-container,
-body.dark-mode .nav-btn,
-body.dark-mode .pagination-btn,
-body.dark-mode .search-input {
-    background-color: #1e1e1e;
-    border-color: #3a3a3a;
-    color: #e8e8e8;
-}
-body.dark-mode .article-card-title,
-body.dark-mode .modal-title {
-    color: #ffffff;
-}
-body.dark-mode .article-card-meta,
-body.dark-mode .modal-meta,
-body.dark-mode .article-author {
-    color: #aaaaaa;
-}
-body.dark-mode .article-category-tag,
-body.dark-mode .manager-article-cate {
-    background-color: #5c1a1a;
-    color: #f0c0c0;
-}
-body.dark-mode .random-btn {
-    background-color: #5c1a1a;
-    color: #ffffff;
-}
-body.dark-mode .random-btn:hover {
-    background-color: #7a2525;
-}
-body.dark-mode .pagination-btn {
-    background-color: #2a2a2a;
-    border-color: #5a5a5a;
-    color: #e8e8e8;
-}
-body.dark-mode .pagination-btn:disabled {
-    opacity: 0.4;
-}
-body.dark-mode .search-input,
-body.dark-mode .form-input,
-body.dark-mode .form-select,
-body.dark-mode .form-textarea {
-    background-color: #1a1a1a;
-    border-color: #444;
-    color: #e8e8e8;
-}
-body.dark-mode .search-input::placeholder {
-    color: #888;
-}
-body.dark-mode .rule-item::before {
-    color: #c06060;
-}
-body.dark-mode .reading-progress {
-    background-color: #cc5555;
-}
-body.dark-mode .modal-header {
-    background-color: #1a1a1a;
-    border-bottom-color: #333;
-}
-body.dark-mode .back-link,
-body.dark-mode .footer-slogan {
-    color: #bbbbbb;
-} {
+        .reading-progress {
             position: fixed;
             top: 0;
             left: 0;
@@ -537,7 +449,6 @@ body.dark-mode .footer-slogan {
             .contribute-btn { height: 50px; font-size: 17px; }
             .category-tab { padding: 6px 12px; font-size: 13px; }
             .pagination-btn { padding: 6px 14px; font-size: 13px; }
-            .dark-mode-toggle { width: 44px; height: 44px; font-size: 18px; right: 16px; bottom: 70px; }
             .back-top-btn { width: 44px; height: 44px; font-size: 20px; }
         }
         @media (max-width: 360px) {
@@ -558,30 +469,19 @@ body.dark-mode .footer-slogan {
                 gap: 28px;
             }
             .article-card {
-                margin-bottom: 0;  /* 网格 gap 已提供间距 */
+                margin-bottom: 0;
                 transition: transform 0.25s ease, box-shadow 0.25s ease;
             }
             .article-card:hover {
                 transform: translateY(-6px);
                 box-shadow: 0 12px 28px rgba(0,0,0,0.1);
             }
-            /* 分页区域上边距调整 */
             .pagination-container {
                 margin-top: 50px;
             }
-            /* 深色模式按钮稍大，位置微调 */
-            .dark-mode-toggle {
-                width: 60px;
-                height: 60px;
-                font-size: 26px;
-                right: 40px;
-                bottom: 110px;
-            }
-            /* 弹窗最大宽度增加 */
             .modal-container {
                 max-width: 920px;
             }
-            /* 导航按钮和分类标签可居中 */
             .nav-buttons {
                 max-width: 600px;
                 margin-left: auto;
@@ -590,7 +490,6 @@ body.dark-mode .footer-slogan {
             .category-tabs {
                 justify-content: center;
             }
-            /* 增大卡片内边距，提升桌面阅读体验 */
             .article-card {
                 padding: 28px;
             }
@@ -602,12 +501,11 @@ body.dark-mode .footer-slogan {
                 margin-left: auto;
                 margin-right: auto;
             }
-            /* 发文公约区域可加宽内边距 */
             .rules-top-module {
                 padding: 36px 32px;
             }
         }
-        /* 超大屏幕（≥1600px）可调为3列，按需启用 */
+        /* 超大屏幕（≥1600px）可调为3列 */
         @media (min-width: 1600px) {
             #articleListContainer {
                 grid-template-columns: repeat(3, 1fr);
@@ -701,18 +599,16 @@ body.dark-mode .footer-slogan {
 </footer>
 
 <div class="back-top-btn" id="backTopBtn">↑</div>
-<div class="dark-mode-toggle" id="darkModeToggle">🌙</div>
 <div class="reading-progress" id="readingProgress"></div>
 
 <script>
-    // ====================== 文章分页、深色模式、进度条、随机、拖动深色按钮 ======================
+    // ====================== 文章分页、深色模式、进度条、随机 ======================
     const articleListContainer = document.getElementById('articleListContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryTabs = document.querySelectorAll('.category-tab');
     const articleModal = document.getElementById('articleModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const backTopBtn = document.getElementById('backTopBtn');
-    const darkModeToggle = document.getElementById('darkModeToggle');
     const readingProgress = document.getElementById('readingProgress');
     const randomBtn = document.getElementById('randomBtn');
 
@@ -720,64 +616,6 @@ body.dark-mode .footer-slogan {
     let currentPage = 1;
     const pageSize = 5;
     let currentFilteredArticles = [];
-
-    // 深色按钮拖动逻辑（同时支持鼠标和触摸）
-    let isDragging = false;
-    let offsetX, offsetY;
-    const savedLeft = localStorage.getItem('darkModeLeft');
-    const savedTop = localStorage.getItem('darkModeTop');
-    if (savedLeft && savedTop) {
-        darkModeToggle.style.left = savedLeft;
-        darkModeToggle.style.top = savedTop;
-        darkModeToggle.style.right = 'auto';
-        darkModeToggle.style.bottom = 'auto';
-    } else {
-        darkModeToggle.style.right = '20px';
-        darkModeToggle.style.bottom = '80px';
-    }
-
-    function startDrag(e) {
-        isDragging = true;
-        darkModeToggle.style.cursor = 'grabbing';
-        let clientX, clientY;
-        if (e.type === 'mousedown') { clientX = e.clientX; clientY = e.clientY; }
-        else { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
-        const rect = darkModeToggle.getBoundingClientRect();
-        offsetX = clientX - rect.left;
-        offsetY = clientY - rect.top;
-        darkModeToggle.style.transition = 'none';
-        e.preventDefault();
-    }
-    function onDrag(e) {
-        if (!isDragging) return;
-        let clientX, clientY;
-        if (e.type === 'mousemove') { clientX = e.clientX; clientY = e.clientY; }
-        else { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
-        let left = clientX - offsetX;
-        let top = clientY - offsetY;
-        left = Math.min(window.innerWidth - darkModeToggle.offsetWidth, Math.max(0, left));
-        top = Math.min(window.innerHeight - darkModeToggle.offsetHeight, Math.max(0, top));
-        darkModeToggle.style.left = left + 'px';
-        darkModeToggle.style.top = top + 'px';
-        darkModeToggle.style.right = 'auto';
-        darkModeToggle.style.bottom = 'auto';
-        e.preventDefault();
-    }
-    function stopDrag() {
-        if (isDragging) {
-            isDragging = false;
-            darkModeToggle.style.cursor = 'grab';
-            darkModeToggle.style.transition = '';
-            localStorage.setItem('darkModeLeft', darkModeToggle.style.left);
-            localStorage.setItem('darkModeTop', darkModeToggle.style.top);
-        }
-    }
-    darkModeToggle.addEventListener('mousedown', startDrag);
-    darkModeToggle.addEventListener('touchstart', startDrag);
-    window.addEventListener('mousemove', onDrag);
-    window.addEventListener('touchmove', onDrag);
-    window.addEventListener('mouseup', stopDrag);
-    window.addEventListener('touchend', stopDrag);
 
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
@@ -856,29 +694,6 @@ body.dark-mode .footer-slogan {
         articleModal.classList.add('show');
         document.body.style.overflow = 'hidden';
     }
-
-    let dragActive = false;
-let dragStartX = 0, dragStartY = 0;
-
-darkModeToggle.addEventListener('touchstart', (e) => {
-    dragStartX = e.touches[0].clientX;
-    dragStartY = e.touches[0].clientY;
-    dragActive = false;
-});
-
-darkModeToggle.addEventListener('touchmove', (e) => {
-    let dx = e.touches[0].clientX - dragStartX;
-    let dy = e.touches[0].clientY - dragStartY;
-    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-        dragActive = true;
-    }
-});
-
-darkModeToggle.addEventListener('click', (e) => {
-    if (dragActive) return;
-    document.body.classList.toggle('dark-mode');
-    darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-});
 
     window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop;
