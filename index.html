@@ -107,7 +107,9 @@
             background-color: #d9251d;
             color: #fff;
         }
-        .rules-top-module {
+
+        /* ====== 红色经典书架样式 ====== */
+        .bookshelf-module {
             background-color: #fff;
             border-radius: 18px;
             padding: 28px 24px;
@@ -115,42 +117,91 @@
             border: 2px solid #d9251d;
             position: relative;
         }
-        .rules-main-title {
+        .bookshelf-title {
             text-align: center;
             font-size: 22px;
             font-weight: 800;
             color: #d9251d;
-            margin-bottom: 24px;
+            margin-bottom: 8px;
         }
-        .rule-item {
+        .bookshelf-sub {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
             margin-bottom: 18px;
+        }
+        .book-search-input {
+            width: 100%;
+            height: 48px;
+            background-color: #f5f5f5;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 0 18px;
             font-size: 15px;
-            line-height: 1.8;
-            padding-left: 24px;
-            position: relative;
+            margin-bottom: 18px;
+            transition: border-color 0.3s ease;
         }
-        .rule-item::before {
-            content: "•";
-            position: absolute;
-            left: 0;
+        .book-search-input:focus {
+            outline: none;
+            border-color: #d9251d;
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        .book-card {
+            background-color: #fef8f0;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .book-card:hover {
+            border-color: #d9251d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(217, 37, 29, 0.08);
+        }
+        .book-icon {
+            font-size: 28px;
             color: #d9251d;
-            font-weight: bold;
+            flex-shrink: 0;
         }
-        .rule-item strong {
+        .book-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .book-info .name {
             font-size: 16px;
             font-weight: 700;
             color: #222;
-            display: block;
         }
-        .rules-conclusion {
-            margin-top: 26px;
-            padding: 14px 18px;
+        .book-info .author {
+            font-size: 13px;
+            color: #888;
+        }
+        .book-info .tag {
+            display: inline-block;
+            font-size: 11px;
             background-color: #fef2f2;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 700;
             color: #d9251d;
+            padding: 1px 10px;
+            border-radius: 12px;
+            margin-top: 3px;
         }
+        .book-empty-tip {
+            text-align: center;
+            color: #999;
+            padding: 30px 0;
+            font-size: 15px;
+        }
+
         .article-list-header {
             font-size: 19px;
             font-weight: 700;
@@ -377,8 +428,6 @@
             color: #999;
             font-size: 14px;
         }
-
-        /* 页面切换样式 */
         .page-section {
             display: none;
         }
@@ -405,8 +454,6 @@
             background-color: #d9251d;
             color: #fff;
         }
-
-        /* 照片区卡片样式 */
         .photo-card {
             background-color: #fff;
             border-radius: 16px;
@@ -444,8 +491,6 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
-        /* 照片弹窗 */
         .photo-modal {
             position: fixed;
             top: 0;
@@ -513,7 +558,20 @@
             opacity: 0.85;
         }
 
-        /* 移动端基础调整 */
+        /* 免责声明 */
+        .disclaimer-box {
+            background-color: #fff3e0;
+            border-left: 4px solid #d9251d;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .disclaimer-box strong {
+            color: #d9251d;
+        }
+
         @media (max-width: 480px) {
             .site-title { font-size: 28px; }
             .article-card-title { font-size: 18px; }
@@ -524,13 +582,12 @@
             .back-top-btn { width: 44px; height: 44px; font-size: 20px; }
             .photo-card img { height: 180px; }
             .photo-modal-close { top: 15px; right: 15px; width: 38px; height: 38px; font-size: 22px; }
+            .book-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 360px) {
             body { padding: 10px; }
             .site-title { font-size: 24px; }
         }
-
-        /* PC 端优化 */
         @media (min-width: 1024px) {
             body {
                 max-width: 1400px;
@@ -585,13 +642,16 @@
                 margin-left: auto;
                 margin-right: auto;
             }
-            .rules-top-module {
-                padding: 36px 32px;
-            }
             .contribute-wrapper {
                 max-width: 600px;
                 margin-left: auto;
                 margin-right: auto;
+            }
+            .bookshelf-module {
+                padding: 36px 32px;
+            }
+            .book-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         @media (min-width: 1600px) {
@@ -604,12 +664,14 @@
             body {
                 max-width: 1600px;
             }
+            .book-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 阅读进度条 -->
     <div class="reading-progress" id="readingProgress"></div>
 
     <!-- ==================== 首页 ==================== -->
@@ -633,31 +695,27 @@
             <p class="site-slogan">为青年发声 · 揭露体系沉疴 · 守护国家与民族的未来</p>
         </header>
 
-        <!-- 联系我们按钮 -->
+        <!-- 联系我们 -->
         <div class="contribute-wrapper">
             <a href="mailto:qqppqqppww@163.com" class="contact-btn">✉ 联系我们</a>
         </div>
 
-        <!-- 子页面入口按钮 -->
+        <!-- 导航按钮：思想交流区 + 自主创作区 -->
         <div class="sub-nav-buttons">
-            <button class="sub-nav-btn" id="goArticlePageBtn">📰 文章区</button>
-            <button class="sub-nav-btn" id="goPhotoPageBtn">📷 照片区</button>
+            <button class="sub-nav-btn" id="goArticlePageBtn">📖 思想交流区</button>
+            <button class="sub-nav-btn" id="goPhotoPageBtn">🎨 自主创作区</button>
         </div>
 
-        <!-- 发文公约 -->
-        <div class="rules-top-module">
-            <h2 class="rules-main-title">📜 新新青年发声公约</h2>
-            <div class="rule-item"><strong>一、为青年发声，捍卫青年权益</strong>聚焦青年成长困境，揭露教育内卷、衡水模式等体系沉疴。</div>
-            <div class="rule-item"><strong>二、理性批判，拒绝极端</strong>正视现实问题，坚持理性表达，坚守法治底线。</div>
-            <div class="rule-item"><strong>三、青年是未来，守护即是护国</strong>守护青年身心健康，就是守护国家长远发展。</div>
-            <div class="rule-item"><strong>四、真实表达，拒绝虚伪</strong>用事实揭露问题，用良知呼唤改变。</div>
-            <div class="rule-item"><strong>五、反对内卷，捍卫正常成长</strong>反对以压榨青春为代价的畸形竞争模式。</div>
-            <div class="rule-item"><strong>六、尊重原创，凝聚青年力量</strong>鼓励真实投稿，凝聚青年共识。</div>
-            <div class="rules-conclusion">青年强则国家强，青年醒则民族醒<br>愿我们以笔为剑，为青年发声，为未来开路</div>
+        <!-- ====== 红色经典书架（首页主体） ====== -->
+        <div class="bookshelf-module">
+            <h2 class="bookshelf-title">📚 红色经典书架</h2>
+            <p class="bookshelf-sub">学原著 · 悟原理 · 强信念</p>
+            <input type="text" class="book-search-input" id="bookSearchInput" placeholder="🔍 搜索书籍名称、作者或标签">
+            <div class="book-grid" id="bookGrid"></div>
         </div>
     </div>
 
-    <!-- ==================== 文章区页面 ==================== -->
+    <!-- ==================== 思想交流区 ==================== -->
     <div class="page-section" id="articlePage">
         <header class="page-header">
             <div style="display:flex;align-items:center;justify-content:center;gap:15px;">
@@ -684,7 +742,12 @@
             <a href="https://wj.qq.com/s2/26084616/2a3d" target="_blank" class="contact-btn">📝 我要发声 · 投稿文章</a>
         </div>
 
-        <h2 class="article-list-header">青年发声 · 文章广场</h2>
+        <!-- ====== 免责声明 ====== -->
+        <div class="disclaimer-box">
+            <strong>⚠️ 免责声明：</strong> 思想交流区内容为他人作品，与本社无关。
+        </div>
+
+        <h2 class="article-list-header">📖 思想交流区</h2>
         <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索文章、观点或关键词">
 
         <div class="category-tabs">
@@ -721,7 +784,7 @@
         </div>
     </div>
 
-    <!-- ==================== 照片区页面 ==================== -->
+    <!-- ==================== 自主创作区 ==================== -->
     <div class="page-section" id="photoPage">
         <header class="page-header">
             <div style="display:flex;align-items:center;justify-content:center;gap:15px;">
@@ -745,10 +808,10 @@
         <button class="back-home-btn" id="backHomeFromPhotoBtn">← 返回首页</button>
 
         <div class="contribute-wrapper">
-            <a href="mailto:qqppqqppww@163.com" class="contact-btn">📷 我要发声 · 投稿照片</a>
+            <a href="mailto:qqppqqppww@163.com" class="contact-btn">🎨 我要投稿 · 自主创作</a>
         </div>
 
-        <h2 class="article-list-header">📷 青年影像 · 照片广场</h2>
+        <h2 class="article-list-header">🎨 自主创作区</h2>
 
         <div id="photoGridContainer"></div>
 
@@ -762,56 +825,59 @@
         </div>
     </div>
 
-    <!-- 页脚 -->
     <footer class="page-footer">
-        <div class="copyright">© 2026 新新青年 为青年发声</div>
+        <div class="copyright">© 2026 新新青年</div>
         <div class="footer-slogan">青年者，国家之魂；守护青年，即是守护未来</div>
     </footer>
 
-    <!-- 回到顶部 -->
     <div class="back-top-btn" id="backTopBtn">↑</div>
 
-    <!-- 加载数据文件 -->
+    <!-- ====== 加载外部数据文件 ====== -->
     <script src="articleData.js"></script>
     <script src="imageData.js"></script>
+    <script src="bookData.js"></script>
+
     <script>
-        // ====================== 全局变量 ======================
-        const articleData = window.articleData || [];
-        const imageData = window.imageData || [];
+        // ====================== 读取外部数据 ======================
+        var bookData = window.bookData || [];
+        var articleData = window.articleData || [];
+        var imageData = window.imageData || [];
 
-        // 首页元素
-        const homePage = document.getElementById('homePage');
-        const goArticlePageBtn = document.getElementById('goArticlePageBtn');
-        const goPhotoPageBtn = document.getElementById('goPhotoPageBtn');
+        // ====================== DOM 元素 ======================
+        var homePage = document.getElementById('homePage');
+        var goArticlePageBtn = document.getElementById('goArticlePageBtn');
+        var goPhotoPageBtn = document.getElementById('goPhotoPageBtn');
 
-        // 文章区元素
-        const articlePage = document.getElementById('articlePage');
-        const backHomeFromArticleBtn = document.getElementById('backHomeFromArticleBtn');
-        const articleListContainer = document.getElementById('articleListContainer');
-        const searchInput = document.getElementById('searchInput');
-        const categoryTabs = document.querySelectorAll('#articlePage .category-tab');
-        const articleModal = document.getElementById('articleModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const randomBtn = document.getElementById('randomBtn');
-        const backTopBtn = document.getElementById('backTopBtn');
-        const readingProgress = document.getElementById('readingProgress');
+        var articlePage = document.getElementById('articlePage');
+        var backHomeFromArticleBtn = document.getElementById('backHomeFromArticleBtn');
+        var articleListContainer = document.getElementById('articleListContainer');
+        var searchInput = document.getElementById('searchInput');
+        var categoryTabs = document.querySelectorAll('#articlePage .category-tab');
+        var articleModal = document.getElementById('articleModal');
+        var closeModalBtn = document.getElementById('closeModalBtn');
+        var randomBtn = document.getElementById('randomBtn');
+        var backTopBtn = document.getElementById('backTopBtn');
+        var readingProgress = document.getElementById('readingProgress');
 
-        // 照片区元素
-        const photoPage = document.getElementById('photoPage');
-        const backHomeFromPhotoBtn = document.getElementById('backHomeFromPhotoBtn');
-        const photoGridContainer = document.getElementById('photoGridContainer');
-        const photoModal = document.getElementById('photoModal');
-        const photoModalImg = document.getElementById('photoModalImg');
-        const photoModalTitle = document.getElementById('photoModalTitle');
-        const photoModalDesc = document.getElementById('photoModalDesc');
-        const photoModalClose = document.getElementById('photoModalClose');
+        var photoPage = document.getElementById('photoPage');
+        var backHomeFromPhotoBtn = document.getElementById('backHomeFromPhotoBtn');
+        var photoGridContainer = document.getElementById('photoGridContainer');
+        var photoModal = document.getElementById('photoModal');
+        var photoModalImg = document.getElementById('photoModalImg');
+        var photoModalTitle = document.getElementById('photoModalTitle');
+        var photoModalDesc = document.getElementById('photoModalDesc');
+        var photoModalClose = document.getElementById('photoModalClose');
 
-        let currentPage = 1;
-        const pageSize = 5;
-        let currentFilteredArticles = [];
+        var bookGrid = document.getElementById('bookGrid');
+        var bookSearchInput = document.getElementById('bookSearchInput');
+
+        var currentPage = 1;
+        var pageSize = 5;
+        var currentFilteredArticles = [];
 
         // ====================== 工具函数 ======================
         function escapeHtml(str) {
+            if (!str) return '';
             return str.replace(/[&<>]/g, function(m) {
                 return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;');
             });
@@ -819,38 +885,81 @@
 
         // ====================== 页面切换 ======================
         function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
+            var sections = document.querySelectorAll('.page-section');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].classList.remove('active');
+            }
             document.getElementById(pageId).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             readingProgress.style.width = '0%';
         }
 
-        goArticlePageBtn.addEventListener('click', () => {
+        goArticlePageBtn.addEventListener('click', function() {
             showPage('articlePage');
             renderArticleList();
         });
 
-        goPhotoPageBtn.addEventListener('click', () => {
+        goPhotoPageBtn.addEventListener('click', function() {
             showPage('photoPage');
             renderPhotos();
         });
 
-        backHomeFromArticleBtn.addEventListener('click', () => {
+        backHomeFromArticleBtn.addEventListener('click', function() {
             showPage('homePage');
         });
 
-        backHomeFromPhotoBtn.addEventListener('click', () => {
+        backHomeFromPhotoBtn.addEventListener('click', function() {
             showPage('homePage');
         });
+
+        // ====================== 书籍渲染（带搜索功能） ======================
+        function renderBooks() {
+            if (!bookData || bookData.length === 0) {
+                bookGrid.innerHTML = '<div class="book-empty-tip">📚 暂无书籍数据</div>';
+                return;
+            }
+
+            var keyword = bookSearchInput.value.trim().toLowerCase();
+            var filtered = bookData.filter(function(item) {
+                if (!item.name) return false;
+                return item.name.toLowerCase().includes(keyword) ||
+                       (item.author || '').toLowerCase().includes(keyword) ||
+                       (item.tag || '').toLowerCase().includes(keyword);
+            });
+
+            if (filtered.length === 0) {
+                bookGrid.innerHTML = '<div class="book-empty-tip">📭 未找到相关书籍</div>';
+                return;
+            }
+
+            var html = '';
+            filtered.forEach(function(book) {
+                var icon = book.icon || '📕';
+                var url = book.url || '#';
+                html += '<a class="book-card" href="' + escapeHtml(url) + '" target="_blank">' +
+                            '<div class="book-icon">' + icon + '</div>' +
+                            '<div class="book-info">' +
+                                '<div class="name">' + escapeHtml(book.name) + '</div>' +
+                                '<div class="author">' + escapeHtml(book.author || '') + '</div>' +
+                                (book.tag ? '<div class="tag">' + escapeHtml(book.tag) + '</div>' : '') +
+                            '</div>' +
+                        '</a>';
+            });
+            bookGrid.innerHTML = html;
+        }
+
+        // 书籍搜索框监听（确保能用）
+        if (bookSearchInput) {
+            bookSearchInput.addEventListener('input', renderBooks);
+        }
 
         // ====================== 文章列表渲染 ======================
         function renderArticleList() {
-            const keyword = searchInput.value.trim().toLowerCase();
-            const activeCategory = document.querySelector('#articlePage .category-tab.active').dataset.cate;
+            var keyword = searchInput.value.trim().toLowerCase();
+            var activeTab = document.querySelector('#articlePage .category-tab.active');
+            var activeCategory = activeTab ? activeTab.dataset.cate : 'all';
 
-            currentFilteredArticles = articleData.filter(item => {
+            currentFilteredArticles = articleData.filter(function(item) {
                 if (!item.check) return false;
                 if (activeCategory !== 'all' && item.cate !== activeCategory) return false;
                 return item.title.toLowerCase().includes(keyword) ||
@@ -858,50 +967,53 @@
                        (item.author || '').toLowerCase().includes(keyword);
             });
 
-            const totalPages = Math.ceil(currentFilteredArticles.length / pageSize);
+            var totalPages = Math.ceil(currentFilteredArticles.length / pageSize);
             if (currentPage > totalPages) currentPage = totalPages || 1;
             if (currentPage < 1) currentPage = 1;
 
-            const start = (currentPage - 1) * pageSize;
-            const pageArticles = currentFilteredArticles.slice(start, start + pageSize);
+            var start = (currentPage - 1) * pageSize;
+            var pageArticles = currentFilteredArticles.slice(start, start + pageSize);
 
             if (currentFilteredArticles.length === 0) {
-                articleListContainer.innerHTML = '<div class="empty-article-tip">暂无发声内容，期待你的第一篇投稿</div>';
+                articleListContainer.innerHTML = '<div class="empty-article-tip">暂无内容，期待你的第一篇投稿</div>';
                 document.getElementById('paginationContainer').style.display = 'none';
                 return;
             }
             document.getElementById('paginationContainer').style.display = 'flex';
 
-            let html = '';
-            pageArticles.forEach((article, idx) => {
-                const originalIndex = start + idx;
-                html += `<div class="article-card" data-index="${originalIndex}">
-                            <h3 class="article-card-title">${escapeHtml(article.title)}</h3>
-                            <div class="article-card-meta">
-                                <span>作者：${escapeHtml(article.author || '匿名青年')}</span>
-                                <span class="article-category-tag">${escapeHtml(article.cate)}</span>
-                            </div>
-                            <div class="article-card-excerpt">${escapeHtml(article.content.slice(0, 130))}${article.content.length > 130 ? '...' : ''}</div>
-                        </div>`;
+            var html = '';
+            pageArticles.forEach(function(article, idx) {
+                var originalIndex = start + idx;
+                html += '<div class="article-card" data-index="' + originalIndex + '">' +
+                            '<h3 class="article-card-title">' + escapeHtml(article.title) + '</h3>' +
+                            '<div class="article-card-meta">' +
+                                '<span>作者：' + escapeHtml(article.author || '匿名') + '</span>' +
+                                '<span class="article-category-tag">' + escapeHtml(article.cate) + '</span>' +
+                            '</div>' +
+                            '<div class="article-card-excerpt">' + escapeHtml(article.content.slice(0, 130)) + (article.content.length > 130 ? '...' : '') + '</div>' +
+                        '</div>';
             });
             articleListContainer.innerHTML = html;
 
-            document.getElementById('pageInfo').innerText = `第 ${currentPage} / ${totalPages} 页`;
+            document.getElementById('pageInfo').innerText = '第 ' + currentPage + ' / ' + totalPages + ' 页';
             document.getElementById('prevPageBtn').disabled = (currentPage <= 1);
             document.getElementById('nextPageBtn').disabled = (currentPage >= totalPages);
 
-            document.querySelectorAll('#articlePage .article-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const data = currentFilteredArticles[parseInt(card.dataset.index)];
-                    if (!data) return;
-                    document.getElementById('modalArticleTitle').innerText = data.title;
-                    document.getElementById('modalArticleAuthor').innerText = `作者：${data.author || '匿名青年'}`;
-                    document.getElementById('modalArticleCategory').innerText = `分类：${data.cate}`;
-                    document.getElementById('modalArticleContent').innerText = data.content;
-                    articleModal.classList.add('show');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
+            var cards = document.querySelectorAll('#articlePage .article-card');
+            for (var i = 0; i < cards.length; i++) {
+                (function(card) {
+                    card.addEventListener('click', function() {
+                        var data = currentFilteredArticles[parseInt(card.dataset.index)];
+                        if (!data) return;
+                        document.getElementById('modalArticleTitle').innerText = data.title;
+                        document.getElementById('modalArticleAuthor').innerText = '作者：' + (data.author || '匿名');
+                        document.getElementById('modalArticleCategory').innerText = '分类：' + data.cate;
+                        document.getElementById('modalArticleContent').innerText = data.content;
+                        articleModal.classList.add('show');
+                        document.body.style.overflow = 'hidden';
+                    });
+                })(cards[i]);
+            }
         }
 
         function resetAndRender() {
@@ -918,7 +1030,7 @@
         }
 
         function goNextPage() {
-            const totalPages = Math.ceil(currentFilteredArticles.length / pageSize);
+            var totalPages = Math.ceil(currentFilteredArticles.length / pageSize);
             if (currentPage < totalPages) {
                 currentPage++;
                 renderArticleList();
@@ -928,40 +1040,42 @@
 
         searchInput.addEventListener('input', resetAndRender);
 
-        categoryTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                categoryTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                resetAndRender();
-            });
-        });
+        for (var i = 0; i < categoryTabs.length; i++) {
+            (function(tab) {
+                tab.addEventListener('click', function() {
+                    for (var j = 0; j < categoryTabs.length; j++) {
+                        categoryTabs[j].classList.remove('active');
+                    }
+                    tab.classList.add('active');
+                    resetAndRender();
+                });
+            })(categoryTabs[i]);
+        }
 
         document.getElementById('prevPageBtn').addEventListener('click', goPrevPage);
         document.getElementById('nextPageBtn').addEventListener('click', goNextPage);
 
         // ====================== 随机阅读 ======================
-        function randomArticle() {
-            const checkedArticles = articleData.filter(item => item.check);
-            if (checkedArticles.length === 0) return;
-            const randomIndex = Math.floor(Math.random() * checkedArticles.length);
-            const article = checkedArticles[randomIndex];
+        randomBtn.addEventListener('click', function() {
+            var checked = articleData.filter(function(item) { return item.check; });
+            if (checked.length === 0) return;
+            var rand = Math.floor(Math.random() * checked.length);
+            var article = checked[rand];
             document.getElementById('modalArticleTitle').innerText = article.title;
-            document.getElementById('modalArticleAuthor').innerText = `作者：${article.author || '匿名青年'}`;
-            document.getElementById('modalArticleCategory').innerText = `分类：${article.cate}`;
+            document.getElementById('modalArticleAuthor').innerText = '作者：' + (article.author || '匿名');
+            document.getElementById('modalArticleCategory').innerText = '分类：' + article.cate;
             document.getElementById('modalArticleContent').innerText = article.content;
             articleModal.classList.add('show');
             document.body.style.overflow = 'hidden';
-        }
-
-        randomBtn.addEventListener('click', randomArticle);
+        });
 
         // ====================== 文章弹窗关闭 ======================
-        closeModalBtn.addEventListener('click', () => {
+        closeModalBtn.addEventListener('click', function() {
             articleModal.classList.remove('show');
             document.body.style.overflow = 'auto';
         });
 
-        articleModal.addEventListener('click', (e) => {
+        articleModal.addEventListener('click', function(e) {
             if (e.target === articleModal) {
                 articleModal.classList.remove('show');
                 document.body.style.overflow = 'auto';
@@ -971,35 +1085,36 @@
         // ====================== 照片渲染 ======================
         function renderPhotos() {
             if (!imageData || imageData.length === 0) {
-                photoGridContainer.innerHTML = '<div class="empty-article-tip">📷 暂无照片，期待你的投稿</div>';
+                photoGridContainer.innerHTML = '<div class="empty-article-tip">🎨 暂无创作内容，期待你的投稿</div>';
                 return;
             }
 
-            let html = '';
-            imageData.forEach((photo, index) => {
-                html += `
-                    <div class="photo-card" data-index="${index}">
-                        <img src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.title)}" loading="lazy">
-                        <div class="photo-card-info">
-                            <div class="photo-card-title">${escapeHtml(photo.title)}</div>
-                            <div class="photo-card-desc">${escapeHtml(photo.description || '')}</div>
-                        </div>
-                    </div>
-                `;
+            var html = '';
+            imageData.forEach(function(photo, index) {
+                html += '<div class="photo-card" data-index="' + index + '">' +
+                            '<img src="' + escapeHtml(photo.url) + '" alt="' + escapeHtml(photo.title) + '" loading="lazy">' +
+                            '<div class="photo-card-info">' +
+                                '<div class="photo-card-title">' + escapeHtml(photo.title) + '</div>' +
+                                '<div class="photo-card-desc">' + escapeHtml(photo.description || '') + '</div>' +
+                            '</div>' +
+                        '</div>';
             });
             photoGridContainer.innerHTML = html;
 
-            document.querySelectorAll('#photoPage .photo-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const data = imageData[parseInt(card.dataset.index)];
-                    if (!data) return;
-                    photoModalImg.src = data.url;
-                    photoModalTitle.textContent = data.title;
-                    photoModalDesc.textContent = data.description || '';
-                    photoModal.classList.add('show');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
+            var cards = document.querySelectorAll('#photoPage .photo-card');
+            for (var i = 0; i < cards.length; i++) {
+                (function(card) {
+                    card.addEventListener('click', function() {
+                        var data = imageData[parseInt(card.dataset.index)];
+                        if (!data) return;
+                        photoModalImg.src = data.url;
+                        photoModalTitle.textContent = data.title;
+                        photoModalDesc.textContent = data.description || '';
+                        photoModal.classList.add('show');
+                        document.body.style.overflow = 'hidden';
+                    });
+                })(cards[i]);
+            }
         }
 
         // ====================== 照片弹窗关闭 ======================
@@ -1008,19 +1123,19 @@
             document.body.style.overflow = 'auto';
         }
 
-        photoModalClose.addEventListener('click', (e) => {
+        photoModalClose.addEventListener('click', function(e) {
             e.stopPropagation();
             closePhotoModal();
         });
 
-        photoModal.addEventListener('click', (e) => {
+        photoModal.addEventListener('click', function(e) {
             if (e.target === photoModal) {
                 closePhotoModal();
             }
         });
 
         // ====================== 键盘快捷键 ======================
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && articleModal.classList.contains('show')) {
                 articleModal.classList.remove('show');
                 document.body.style.overflow = 'auto';
@@ -1040,29 +1155,26 @@
             }
         });
 
-        // ====================== 阅读进度条 ======================
-        window.addEventListener('scroll', () => {
-            const winScroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
+        // ====================== 阅读进度条 + 回到顶部 ======================
+        window.addEventListener('scroll', function() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
             readingProgress.style.width = scrolled + '%';
-        });
-
-        // ====================== 回到顶部按钮 ======================
-        window.addEventListener('scroll', () => {
             backTopBtn.classList.toggle('show', window.scrollY > 300);
         });
 
-        backTopBtn.addEventListener('click', () => {
+        backTopBtn.addEventListener('click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         // ====================== 初始化 ======================
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', function() {
             showPage('homePage');
+            renderBooks();
             renderArticleList();
             renderPhotos();
         });
     </script>
 </body>
-                        </html>
+</html>
