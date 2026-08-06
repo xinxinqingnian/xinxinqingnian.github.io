@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="新新青年官方平台，为青年发声，揭露教育与社会体系的沉疴，守护青年权益，捍卫国家未来。">
-    <meta name="keywords" content="新新青年,为青年发声,反对衡水模式,教育内卷,青年权益,社会观察,思想阵地,家国未来">
+    <meta name="description" content="新新青年 · 红色研读平台，研读马列经典，传承红色基因，做新时代奋斗者。">
+    <meta name="keywords" content="新新青年,红色经典,共产党宣言,马克思主义,理论学习,青年思想">
     <meta name="author" content="新新青年运营团队">
     <meta name="copyright" content="新新青年 版权所有 2026">
     <meta name="robots" content="index,follow">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>新新青年 - 为青年发声 · 揭露体系沉疴 · 守护国家未来</title>
+    <title>新新青年 · 红色研读</title>
     <style>
         * {
             margin: 0;
@@ -107,6 +107,102 @@
             background-color: #d9251d;
             color: #fff;
         }
+
+        /* ===== 首页 · 红色经典书架 ===== */
+        .bookshelf-module {
+            background-color: #fff;
+            border-radius: 18px;
+            padding: 28px 24px;
+            margin-bottom: 30px;
+            border: 2px solid #d9251d;
+            position: relative;
+        }
+        .bookshelf-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #d9251d;
+            margin-bottom: 8px;
+        }
+        .bookshelf-sub {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 18px;
+        }
+        .book-search-input {
+            width: 100%;
+            height: 48px;
+            background-color: #f5f5f5;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 0 18px;
+            font-size: 15px;
+            margin-bottom: 18px;
+            transition: border-color 0.3s ease;
+        }
+        .book-search-input:focus {
+            outline: none;
+            border-color: #d9251d;
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        .book-card {
+            background-color: #fef8f0;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .book-card:hover {
+            border-color: #d9251d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(217, 37, 29, 0.08);
+        }
+        .book-icon {
+            font-size: 28px;
+            color: #d9251d;
+            flex-shrink: 0;
+        }
+        .book-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .book-info .name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+        }
+        .book-info .author {
+            font-size: 13px;
+            color: #888;
+        }
+        .book-info .tag {
+            display: inline-block;
+            font-size: 11px;
+            background-color: #fef2f2;
+            color: #d9251d;
+            padding: 1px 10px;
+            border-radius: 12px;
+            margin-top: 3px;
+        }
+        .book-empty-tip {
+            text-align: center;
+            color: #999;
+            padding: 30px 0;
+            font-size: 15px;
+        }
+
+        /* ===== 文章区公约（移到思想交流区顶部） ===== */
         .rules-top-module {
             background-color: #fff;
             border-radius: 18px;
@@ -151,6 +247,7 @@
             font-weight: 700;
             color: #d9251d;
         }
+
         .article-list-header {
             font-size: 19px;
             font-weight: 700;
@@ -524,6 +621,7 @@
             .back-top-btn { width: 44px; height: 44px; font-size: 20px; }
             .photo-card img { height: 180px; }
             .photo-modal-close { top: 15px; right: 15px; width: 38px; height: 38px; font-size: 22px; }
+            .book-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 360px) {
             body { padding: 10px; }
@@ -588,10 +686,16 @@
             .rules-top-module {
                 padding: 36px 32px;
             }
+            .bookshelf-module {
+                padding: 36px 32px;
+            }
             .contribute-wrapper {
                 max-width: 600px;
                 margin-left: auto;
                 margin-right: auto;
+            }
+            .book-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         @media (min-width: 1600px) {
@@ -603,6 +707,9 @@
             }
             body {
                 max-width: 1600px;
+            }
+            .book-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
     </style>
@@ -640,24 +747,20 @@
 
         <!-- 子页面入口按钮 -->
         <div class="sub-nav-buttons">
-            <button class="sub-nav-btn" id="goArticlePageBtn">📰 文章区</button>
-            <button class="sub-nav-btn" id="goPhotoPageBtn">📷 照片区</button>
+            <button class="sub-nav-btn" id="goArticlePageBtn">📖 思想交流区</button>
+            <button class="sub-nav-btn" id="goPhotoPageBtn">🎨 自主创作区</button>
         </div>
 
-        <!-- 发文公约 -->
-        <div class="rules-top-module">
-            <h2 class="rules-main-title">📜 新新青年发声公约</h2>
-            <div class="rule-item"><strong>一、为青年发声，捍卫青年权益</strong>聚焦青年成长困境，揭露教育内卷、衡水模式等体系沉疴。</div>
-            <div class="rule-item"><strong>二、理性批判，拒绝极端</strong>正视现实问题，坚持理性表达，坚守法治底线。</div>
-            <div class="rule-item"><strong>三、青年是未来，守护即是护国</strong>守护青年身心健康，就是守护国家长远发展。</div>
-            <div class="rule-item"><strong>四、真实表达，拒绝虚伪</strong>用事实揭露问题，用良知呼唤改变。</div>
-            <div class="rule-item"><strong>五、反对内卷，捍卫正常成长</strong>反对以压榨青春为代价的畸形竞争模式。</div>
-            <div class="rule-item"><strong>六、尊重原创，凝聚青年力量</strong>鼓励真实投稿，凝聚青年共识。</div>
-            <div class="rules-conclusion">青年强则国家强，青年醒则民族醒<br>愿我们以笔为剑，为青年发声，为未来开路</div>
+        <!-- ===== 首页 · 红色经典书架（替换原发文公约） ===== -->
+        <div class="bookshelf-module">
+            <h2 class="bookshelf-title">📚 红色经典书架</h2>
+            <p class="bookshelf-sub">学原著 · 悟原理 · 强信念</p>
+            <input type="text" class="book-search-input" id="bookSearchInput" placeholder="🔍 搜索书籍名称、作者或标签">
+            <div class="book-grid" id="bookGrid"></div>
         </div>
     </div>
 
-    <!-- ==================== 文章区页面 ==================== -->
+    <!-- ==================== 思想交流区（原文章区） ==================== -->
     <div class="page-section" id="articlePage">
         <header class="page-header">
             <div style="display:flex;align-items:center;justify-content:center;gap:15px;">
@@ -684,17 +787,29 @@
             <a href="https://wj.qq.com/s2/26084616/2a3d" target="_blank" class="contact-btn">📝 我要发声 · 投稿文章</a>
         </div>
 
-        <h2 class="article-list-header">青年发声 · 文章广场</h2>
+        <!-- ===== 发文公约移到思想交流区顶部 ===== -->
+        <div class="rules-top-module">
+            <h2 class="rules-main-title">📜 新新青年学习公约</h2>
+            <div class="rule-item"><strong>一、研读经典，掌握真理</strong>以《共产党宣言》等经典著作为根本，系统学习马克思主义理论，用科学理论武装头脑。</div>
+            <div class="rule-item"><strong>二、理论联系实际，服务人民</strong>将理论学习与当代中国实践相结合，关注基层、关注人民，在知行合一中增长才干。</div>
+            <div class="rule-item"><strong>三、坚定信仰，做时代新人</strong>在学思践悟中坚定理想信念，在奋发有为中践行初心使命，勇担民族复兴重任。</div>
+            <div class="rule-item"><strong>四、理性讨论，真诚交流</strong>以开放包容的心态进行思想交流，真理越辩越明，在碰撞中共同进步。</div>
+            <div class="rule-item"><strong>五、传承红色基因，赓续精神血脉</strong>讲好革命故事，弘扬光荣传统，让红色精神在青年中代代相传。</div>
+            <div class="rule-item"><strong>六、守正创新，与时俱进</strong>在坚持正确方向的前提下，积极探索理论表达的创新形式，让经典焕发时代活力。</div>
+            <div class="rules-conclusion">学习马列经典 · 坚定理想信念 · 做新时代的奋斗者</div>
+        </div>
+
+        <h2 class="article-list-header">📖 思想交流区</h2>
         <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索文章、观点或关键词">
 
         <div class="category-tabs">
-            <div class="category-tab active" data-cate="all">全部内容</div>
-            <div class="category-tab" data-cate="青年观点">青年观点</div>
-            <div class="category-tab" data-cate="批判揭露">批判揭露</div>
-            <div class="category-tab" data-cate="教育反思">教育反思</div>
-            <div class="category-tab" data-cate="行动倡议">行动倡议</div>
-            <div class="category-tab" data-cate="其他">其他</div>
-            <button class="random-btn" id="randomBtn">🎲 随机看看</button>
+            <div class="category-tab active" data-cate="all">全部</div>
+            <div class="category-tab" data-cate="经典研读">经典研读</div>
+            <div class="category-tab" data-cate="理论探讨">理论探讨</div>
+            <div class="category-tab" data-cate="时代思考">时代思考</div>
+            <div class="category-tab" data-cate="实践感悟">实践感悟</div>
+            <div class="category-tab" data-cate="红色记忆">红色记忆</div>
+            <button class="random-btn" id="randomBtn">🎲 随机阅读</button>
         </div>
 
         <div id="articleListContainer"></div>
@@ -721,7 +836,7 @@
         </div>
     </div>
 
-    <!-- ==================== 照片区页面 ==================== -->
+    <!-- ==================== 自主创作区（原照片区） ==================== -->
     <div class="page-section" id="photoPage">
         <header class="page-header">
             <div style="display:flex;align-items:center;justify-content:center;gap:15px;">
@@ -745,10 +860,10 @@
         <button class="back-home-btn" id="backHomeFromPhotoBtn">← 返回首页</button>
 
         <div class="contribute-wrapper">
-            <a href="mailto:qqppqqppww@163.com" class="contact-btn">📷 我要发声 · 投稿照片</a>
+            <a href="mailto:qqppqqppww@163.com" class="contact-btn">🎨 我要投稿 · 自主创作</a>
         </div>
 
-        <h2 class="article-list-header">📷 青年影像 · 照片广场</h2>
+        <h2 class="article-list-header">🎨 自主创作区</h2>
 
         <div id="photoGridContainer"></div>
 
@@ -764,18 +879,24 @@
 
     <!-- 页脚 -->
     <footer class="page-footer">
-        <div class="copyright">© 2026 新新青年 为青年发声</div>
-        <div class="footer-slogan">青年者，国家之魂；守护青年，即是守护未来</div>
+        <div class="copyright">© 2026 新新青年 · 红色研读</div>
+        <div class="footer-slogan">学习马列经典 · 坚定理想信念 · 做新时代的奋斗者</div>
     </footer>
 
     <!-- 回到顶部 -->
     <div class="back-top-btn" id="backTopBtn">↑</div>
 
-    <!-- 加载数据文件 -->
+    <!-- ========== 数据文件 ========== -->
+    <!-- bookData.js：首页红色经典书籍数据 -->
+    <script src="bookData.js"></script>
+    <!-- articleData.js：思想交流区文章数据 -->
     <script src="articleData.js"></script>
+    <!-- imageData.js：自主创作区照片数据 -->
     <script src="imageData.js"></script>
+
     <script>
         // ====================== 全局变量 ======================
+        const bookData = window.bookData || [];
         const articleData = window.articleData || [];
         const imageData = window.imageData || [];
 
@@ -806,16 +927,57 @@
         const photoModalDesc = document.getElementById('photoModalDesc');
         const photoModalClose = document.getElementById('photoModalClose');
 
+        // 书籍区元素
+        const bookGrid = document.getElementById('bookGrid');
+        const bookSearchInput = document.getElementById('bookSearchInput');
+
         let currentPage = 1;
         const pageSize = 5;
         let currentFilteredArticles = [];
+        let currentFilteredBooks = [];
 
         // ====================== 工具函数 ======================
         function escapeHtml(str) {
+            if (!str) return '';
             return str.replace(/[&<>]/g, function(m) {
                 return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;');
             });
         }
+
+        // ====================== 书籍渲染 ======================
+        function renderBooks() {
+            const keyword = bookSearchInput.value.trim().toLowerCase();
+
+            currentFilteredBooks = bookData.filter(item => {
+                if (!item.name) return false;
+                return item.name.toLowerCase().includes(keyword) ||
+                       (item.author || '').toLowerCase().includes(keyword) ||
+                       (item.tag || '').toLowerCase().includes(keyword);
+            });
+
+            if (currentFilteredBooks.length === 0) {
+                bookGrid.innerHTML = '<div class="book-empty-tip">📭 未找到相关书籍</div>';
+                return;
+            }
+
+            let html = '';
+            currentFilteredBooks.forEach(book => {
+                const icon = book.icon || '📕';
+                html += `
+                    <a class="book-card" href="${escapeHtml(book.url || '#')}" target="_blank">
+                        <div class="book-icon">${icon}</div>
+                        <div class="book-info">
+                            <div class="name">${escapeHtml(book.name)}</div>
+                            <div class="author">${escapeHtml(book.author || '')}</div>
+                            ${book.tag ? `<div class="tag">${escapeHtml(book.tag)}</div>` : ''}
+                        </div>
+                    </a>
+                `;
+            });
+            bookGrid.innerHTML = html;
+        }
+
+        bookSearchInput.addEventListener('input', renderBooks);
 
         // ====================== 页面切换 ======================
         function showPage(pageId) {
@@ -866,7 +1028,7 @@
             const pageArticles = currentFilteredArticles.slice(start, start + pageSize);
 
             if (currentFilteredArticles.length === 0) {
-                articleListContainer.innerHTML = '<div class="empty-article-tip">暂无发声内容，期待你的第一篇投稿</div>';
+                articleListContainer.innerHTML = '<div class="empty-article-tip">暂无内容，期待你的第一篇投稿</div>';
                 document.getElementById('paginationContainer').style.display = 'none';
                 return;
             }
@@ -878,7 +1040,7 @@
                 html += `<div class="article-card" data-index="${originalIndex}">
                             <h3 class="article-card-title">${escapeHtml(article.title)}</h3>
                             <div class="article-card-meta">
-                                <span>作者：${escapeHtml(article.author || '匿名青年')}</span>
+                                <span>作者：${escapeHtml(article.author || '匿名')}</span>
                                 <span class="article-category-tag">${escapeHtml(article.cate)}</span>
                             </div>
                             <div class="article-card-excerpt">${escapeHtml(article.content.slice(0, 130))}${article.content.length > 130 ? '...' : ''}</div>
@@ -895,7 +1057,7 @@
                     const data = currentFilteredArticles[parseInt(card.dataset.index)];
                     if (!data) return;
                     document.getElementById('modalArticleTitle').innerText = data.title;
-                    document.getElementById('modalArticleAuthor').innerText = `作者：${data.author || '匿名青年'}`;
+                    document.getElementById('modalArticleAuthor').innerText = `作者：${data.author || '匿名'}`;
                     document.getElementById('modalArticleCategory').innerText = `分类：${data.cate}`;
                     document.getElementById('modalArticleContent').innerText = data.content;
                     articleModal.classList.add('show');
@@ -946,7 +1108,7 @@
             const randomIndex = Math.floor(Math.random() * checkedArticles.length);
             const article = checkedArticles[randomIndex];
             document.getElementById('modalArticleTitle').innerText = article.title;
-            document.getElementById('modalArticleAuthor').innerText = `作者：${article.author || '匿名青年'}`;
+            document.getElementById('modalArticleAuthor').innerText = `作者：${article.author || '匿名'}`;
             document.getElementById('modalArticleCategory').innerText = `分类：${article.cate}`;
             document.getElementById('modalArticleContent').innerText = article.content;
             articleModal.classList.add('show');
@@ -971,7 +1133,7 @@
         // ====================== 照片渲染 ======================
         function renderPhotos() {
             if (!imageData || imageData.length === 0) {
-                photoGridContainer.innerHTML = '<div class="empty-article-tip">📷 暂无照片，期待你的投稿</div>';
+                photoGridContainer.innerHTML = '<div class="empty-article-tip">🎨 暂无创作内容，期待你的投稿</div>';
                 return;
             }
 
@@ -1060,9 +1222,10 @@
         // ====================== 初始化 ======================
         window.addEventListener('DOMContentLoaded', () => {
             showPage('homePage');
+            renderBooks();
             renderArticleList();
             renderPhotos();
         });
     </script>
 </body>
-                        </html>
+    </html>
